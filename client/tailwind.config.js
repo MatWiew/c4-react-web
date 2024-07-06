@@ -15,4 +15,7 @@ module.exports = {
     'src/components/**/*.pcss', // Include PostCSS files specific to components
     // Add more directories as needed
   ],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
 };

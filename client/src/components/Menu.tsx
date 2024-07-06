@@ -1,44 +1,300 @@
-import React from 'react';
+import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import ClubLogo from "../assets/ClubLogo";
+import { useMediaQuery } from "@react-hook/media-query";
+import { MenuButton } from "./MenuButtonAnimation/MenuButton";
+
+
 
 const Menu: React.FC = () => {
-    
-    return (
-       
+  const [isOpen, setIsOpen] = useState(false);
 
-<nav className="bg-white border-gray-200 dark:bg-gray-900">
-  <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-        <span className="sr-only">Open main menu</span>
-        <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-        </svg>
-    </button>
-    <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-      <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-        <li>
-          <a href="/home" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Strona główna</a>
-        </li>
-        <li>
-          <a href="/news" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Aktualności</a>
-        </li>
-        <li>
-          <a href="/tournaments" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Turnieje</a>
-        </li>
-        <li>
-          <a href="/club" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Klub</a>
-        </li>
-        <li>
-          <a href="/shop" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sklep</a>
-        </li>
-        <li>
-          <a href="/contact" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Kontakt</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+  // Hook to detect screen size
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
-    );
-}
+  // Close the menu when the screen size is lg
+  React.useEffect(() => {
+    if (isLargeScreen) {
+      setIsOpen(false);
+    }
+  }, [isLargeScreen]);
+
+  // Function to handle click on mobile menu button
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <nav className="flex items-center justify-between p-6 mx-auto mt-[-2.5vw]">
+      {/* Wrapper for mobile view */}
+      <div className="flex w-full justify-between items-center lg:hidden">
+      
+      
+      {/* <motion.button
+          whileHover={{ scale: [null, 1.3, 1.2] }}
+          transition={{ duration: 0.3 }}
+          onClick={toggleMenu}
+          className="flex items-center  rounded text-white focus:outline-none"
+        >
+          <svg
+            className={`fill-current h-[5vw] w-[5vw] ${
+              isOpen ? "hidden" : "block"
+            }`}
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+          </svg>
+        </motion.button> */}
+
+
+        <MenuButton />
+        <div className="flex items-center text-white">
+          <ClubLogo size={15} />
+        </div>
+      </div>
+
+      {/* Wrapper for larger screens */}
+      <div className="hidden lg:flex items-center justify-between w-full">
+        <div className="flex items-center text-white">
+          <ClubLogo size={15} />
+        </div>
+        <div className="text-sm lg:flex-grow lg:text-right">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Strona główna
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/news"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Aktualności
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/tournaments"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Turnieje
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/club"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Klub
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/shop"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Skelp
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+                : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              Kontakt
+            </motion.span>
+          </NavLink>
+        </div>
+      </div>
+
+      {/* Conditional rendering for the navigation links on smaller screens */}
+      <div
+        className={`fixed top-0 left-0 w-[75%] max-w-[500px] h-full bg-purple-950 z-49 ${
+          isOpen ? "block" : "hidden"
+        }`}
+      >
+        <motion.button
+          whileHover={{ scale: [null, 1.5, 1.4] }}
+          transition={{ duration: 0.3 }}
+          onClick={toggleMenu}
+          className="absolute right-0 mx-[20px] my-[20px] rounded text-white focus:outline-none"
+        >
+          <svg
+            className={`fill-current h-[20px] w-[20px] ${
+              isOpen ? "block" : "hidden"
+            }`}
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+          </svg>
+        </motion.button>
+        <div className="text-sm text-center lg:flex-grow lg:text-right py-12 px-[10vw]">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Strona główna
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/news"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Aktualności
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/tournaments"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Turnieje
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/club"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Klub
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/shop"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Sklep
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-white block bg-purple-700 lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+                : "text-gray-400 block lg:inline-block lg:mt-0 font-sans text-xl mr-4 py-3 rounded-lg"
+            }
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+            Kontakt
+            </motion.span>
+          </NavLink>
+        </div>
+      </div>
+    </nav>
+  );
+};
 
 export default Menu;
