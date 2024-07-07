@@ -58,7 +58,7 @@ export const MenuButton = () => {
       custom={containerHeight ?? 0} // Use containerHeight or fallback to 0
       ref={containerRef}
     >
-      <motion.div className="absolute top-0 left-0 bottom-0 w-72 bg-white" variants={sidebar} />
+      <motion.div className="absolute top-0 left-0 bottom-0 w-72 bg-purple-950" variants={sidebar} />
       <Navigation />
       <MenuToggle toggle={() => toggleOpen()} isOpen={isOpen} />
     </motion.nav>
