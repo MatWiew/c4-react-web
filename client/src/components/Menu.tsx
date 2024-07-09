@@ -143,7 +143,7 @@ const Menu: React.FC = () => {
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
               className="inline-block"
             >
-              Skelp
+              Sklep
             </motion.span>
           </NavLink>
           <NavLink
