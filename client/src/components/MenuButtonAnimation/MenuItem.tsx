@@ -1,6 +1,7 @@
 import * as React from "react";
-import { motion, Variants, AnimatePresence } from "framer-motion";
-import { NavLink, useLocation } from "react-router-dom";
+import { motion, Variants } from "framer-motion";
+import { NavLink } from "react-router-dom";
+import { References } from "../Types";
 
 const variants: Variants = {
   open: {
@@ -20,7 +21,10 @@ const variants: Variants = {
 };
 
 type MenuItemProps = {
-  i: number; // Assuming i is the index
+  i: number;
+  closeMenu: () => void;
+  scrollToDesiredContent: (content: string) => void;
+  sectionInView: string | null;
 };
 
 const menuItemsTexts = [
@@ -34,8 +38,37 @@ const menuItemsTexts = [
 
 const to = ["/", "/news", "/tournaments", "/club", "/shop", "/contact"];
 
-export const MenuItem: React.FC<MenuItemProps> = ({ i }) => {
-  const location = useLocation();
+export const MenuItem: React.FC<MenuItemProps> = ({
+  i,
+  closeMenu,
+  scrollToDesiredContent,
+  sectionInView,
+}) => {
+
+  const refs: References = {
+    0: "about",
+    1: "news",
+    2: "tournaments",
+    3: "club",
+    4: "shop",
+    5: "contact",
+  };
+
+  const handleClick = async () => {
+    const ref = refs[i];
+    if (ref) {
+      await scrollToDesiredContent(ref);
+      closeMenu();
+    }
+  };
+
+  // Determine if the current section is active
+  const isActive = sectionInView === refs[i];
+
+  // Define classes for active and inactive states
+  const linkClasses = isActive
+    ? "font-semibold text-white rounded-md p-2"
+    : "text-gray-400";
 
   return (
     <motion.li
@@ -47,35 +80,29 @@ export const MenuItem: React.FC<MenuItemProps> = ({ i }) => {
     >
       <NavLink
         to={to[i]}
-        className={({ isActive }) =>
-          `block lg:inline-block lg:mt-0 font-sans text-xl relative z-10 ${
-            isActive
-              ? "font-semibold text-white rounded-md p-2"
-              : "text-gray-400"
-          }`
-        }
+        onClick={handleClick}
+        className={`block lg:inline-block lg:mt-0 font-sans text-xl relative z-[47] ${linkClasses}`}
         style={{
           width: "100%",
           textAlign: "center",
-          padding: "0.5rem 1rem", // Adjust padding as needed
-          lineHeight: "1.5rem", // Adjust line height for consistency
-          textDecoration: "none", // Remove default underline
+          padding: "0.5rem 1rem",
+          lineHeight: "1.5rem",
+          textDecoration: "none",
         }}
       >
         {menuItemsTexts[i % menuItemsTexts.length]}
       </NavLink>
-      <AnimatePresence>
-        {location.pathname === to[i] && (
-          <motion.div
-            key="activeNavLinkSelection"
-            layout
-            layoutId="activeNavLinkSelection"
-            className="absolute inset-0 bg-purple-700 rounded-md"
-            style={{ zIndex: 0 }}
-            animate={{ opacity: 1 }}
-          />
-        )}
-      </AnimatePresence>
+
+      {isActive && (
+        <motion.div
+          layoutId={`activeNavLinkSelection`}
+          className="absolute inset-0 bg-purple-700 rounded-md"
+          style={{ zIndex: 0 }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
+      )}
     </motion.li>
   );
 };

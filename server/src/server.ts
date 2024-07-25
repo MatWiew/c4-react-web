@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';

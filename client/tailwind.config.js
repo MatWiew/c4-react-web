@@ -3,6 +3,7 @@ module.exports = {
   plugins: [
     require('tailwindcss'),
     require('autoprefixer'),
+    require('@tailwindcss/forms'),
     // Add other PostCSS plugins here as needed
   ],
   // Specify where PostCSS should look for files to process
@@ -17,5 +18,16 @@ module.exports = {
   ],
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
+    
   ],
+  theme: {
+    extend: {
+      scrollSnapType: {
+        y: 'y mandatory',
+      },
+      scrollSnapAlign: {
+        start: 'start',
+      },
+    },
+  }
 };

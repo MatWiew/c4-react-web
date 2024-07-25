@@ -1,31 +1,51 @@
-import React from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import King from "../assets/King";
 import QuestionMark from "../assets/QuestionMark";
 
-function About() {
+const About = forwardRef<HTMLDivElement>((props, ref) => {
+  const [kingSize, setKingSize] = useState(
+    window.innerWidth > 1024 ? 385 : 290
+  );
+  const [questionMarkSize, setQuestionMarkSize] = useState(
+    window.innerWidth > 1024 ? 400 : 320
+  );
+  const [bp, setBp] = useState(
+    window.innerWidth > 1024 ? true : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setKingSize(window.innerWidth > 1024 ? 385 : 290);
+      setQuestionMarkSize(window.innerWidth > 1024 ? 400 : 320);
+      setBp(window.innerWidth > 1024 ? true : false);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <div className="flex flex-col mx-12 pt-20 w-full max-h-[385px] relative">
-        <div className="relative">
-          <div className="mt-20 w-full text-5xl italic font-black text-white relative">
-            Kim jesteśmy
+      <div ref={ref} id="about" className="relative top-0 flex w-full justify-center snap-start">
+        <div className="flex items-center lg:max-w-[525px] lg:mt-[457px] mt-[20rem]">
+          <div className="text-center">
+            <div className="lg:text-5xl text-4xl italic font-black text-white lg:max-w-[45vw] max-w-[100vw]">
+              Kim jesteśmy
+            </div>
+            <div className="lg:mt-10 mt-5 lg:text-lg text-sm leading-7 text-zinc-400 lg:max-w-[45vw] max-w-[100vw] mx-9 lg:mx-0">
+            Fundacja C4 to klub szachowy mający na celu zrzeszanie szachistów i popularyzowanie gry w szachy. Nasza misja to wspieranie rozwoju umiejętności strategicznych i intelektualnych wśród graczy w każdym wieku. Organizujemy turnieje, warsztaty i treningi, aby doskonalić techniki gry i budować społeczność pasjonatów szachów.
+            </div>
           </div>
-          <div className="absolute inset-0 flex items-center">
-            {/* Assuming QuestionMark is an SVG component */}
-            <QuestionMark size={385} />
-          </div>
-          <div className="mt-14 w-full text-lg leading-7 text-zinc-400 max-w-[50vw] whitespace-pre-line">
-            Informacje o nas i o klubie...
-          </div>
-          {/* Position the King component relative to its parent */}
-          <div className="absolute top-0 right-0">
-            {/* Assuming King is an SVG component */}
-            <King size={385} />
-          </div>
+          <QuestionMark size={questionMarkSize} isLargeBreakpoint={bp}/>
+        </div>
+        <div className="lg:mt-[457px] mt-[300px] lg:ml-[20vw] hidden lg:block">
+          <King size={kingSize} />
         </div>
       </div>
     </>
   );
-}
+});
+
+About.displayName = "About";
 
 export default About;

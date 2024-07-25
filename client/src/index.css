@@ -4,6 +4,41 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #535353;
+}
+
+/* Styling Scrollbar */
+
+body {
+  --sb-track-color: #26292b;
+  --sb-thumb-color: #7000ff;
+  --sb-size: 10px;
+}
+
+body::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
+/* Styling Scrollbar */
+
 * {
   font-family: "Noto Sans", "sans-serif";
 }
@@ -14,22 +49,54 @@ body {
   background-image: linear-gradient(
     180deg,
     #000000 0%,
-    #0e0519 4%,
-    #150727 10%,
-    #232323 21%,
-    #000e23 39%,
-    #002720 52%,
-    #002306 63%,
-    #2b3200 75%,
+    #0c0416 4%,
+    #0f041c 10%,
+    #1a1a1a 21%,
+    #000a1a 39%,
+    #001d18 52%,
+    #011b04 63%,
+    #202500 75%,
     #000000 86%,
     #000000 100%
   );
 }
 
+@media (max-width: 1024px) {
+  body {
+    background-size: 100% 4443px;
+    background-position: 0px 0px;
+    background-image: linear-gradient(
+      180deg,
+      #000000 0%,
+      #0c0416 4%,
+      #0f041c 10%,
+      #1a1a1a 21%,
+      #000a1a 39%,
+      #001d18 52%,
+      #011b04 63%,
+      #202500 75%,
+      #000000 86%,
+      #000000 100%
+    );
+  }
+}
+
 html,
 body {
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
+body {
+  scroll-snap-type: y mandatory;
+}
 
+.App > * {
+  scroll-snap-align: start;
+}

@@ -1,3 +1,4 @@
+// MenuButton.tsx
 import { useRef, useState, useEffect } from "react";
 import { motion, useCycle } from "framer-motion";
 import MenuToggle from "./MenuToggle";
@@ -13,7 +14,7 @@ const sidebar = {
     }
   }),
   closed: {
-    clipPath: "circle(0px at 40px 40px)",
+    clipPath: "circle(0px at 39px 3.5rem)",
     transition: {
       delay: 0.5,
       type: "spring",
@@ -23,7 +24,12 @@ const sidebar = {
   }
 };
 
-export const MenuButton = () => {
+interface MenuButtonProps {
+  scrollToDesiredContent: (section: string) => void;
+  sectionInView: string | null;
+}
+
+export const MenuButton: React.FC<MenuButtonProps> = ({ scrollToDesiredContent, sectionInView }) => {
   const [isOpen, toggleOpen] = useCycle(false, true);
   const [containerHeight, setContainerHeight] = useState<number | null>(null); // Set initial state to null or 0
   const containerRef = useRef<HTMLDivElement>(null); // Specify the type of ref
@@ -51,6 +57,12 @@ export const MenuButton = () => {
     };
   }, []);
 
+  const closeMenu = () => {
+    if (isOpen) {
+      toggleOpen(); // Close the menu
+    }
+  };
+
   return (
     <motion.nav
       initial={false}
@@ -58,8 +70,8 @@ export const MenuButton = () => {
       custom={containerHeight ?? 0} // Use containerHeight or fallback to 0
       ref={containerRef}
     >
-      <motion.div className="absolute top-0 left-0 bottom-0 w-72 bg-purple-950" variants={sidebar} />
-      <Navigation />
+      <motion.div className="absolute top-0 left-0 bottom-0 w-72 h-[3000px] bg-purple-950 z-[45]" variants={sidebar} />
+      <Navigation closeMenu={closeMenu} scrollToDesiredContent={scrollToDesiredContent} sectionInView={sectionInView} isOpen={isOpen} />
       <MenuToggle toggle={() => toggleOpen()} isOpen={isOpen} />
     </motion.nav>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-function QuestionMark({ size }) {
+function QuestionMark({ size, isLargeBreakpoint }) {
   // Fixed aspect ratio based on the original dimensions
   const aspectRatio = 491.397 / 778.058; // originalWidth / originalHeight
 
@@ -23,7 +23,15 @@ function QuestionMark({ size }) {
       height={height}
       version="1.1"
       viewBox="0 0 110.112 174.346"
-      style={{ position: "absolute", zIndex: "-1" }}
+      style={{
+        position: "absolute",
+        zIndex: "-1",
+        width: `45vw`,
+        maxWidth: "525px",
+        left: isLargeBreakpoint ? 'auto' : '50%',
+        transform: isLargeBreakpoint ? 'none' : 'translateX(-50%)',
+        top: isLargeBreakpoint ? "457px" : "17rem"
+      }}
     >
       <g transform="translate(308.704 -179.574)">
         <path

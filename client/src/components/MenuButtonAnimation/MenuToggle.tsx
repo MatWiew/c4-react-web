@@ -10,7 +10,7 @@ const MenuToggle: React.FC<MenuToggleProps> = ({ toggle, isOpen }) => (
   <button 
   onClick={toggle} 
   style={{ background: 'transparent', border: 'none', padding: 0 }}
-  className="outline-none border-none select-none cursor-pointer absolute top-[18px] left-[15px] w-12 h-12 rounded-full bg-transparent"
+  className="outline-none border-none select-none cursor-pointer absolute top-[2rem] left-[15px] w-12 h-12 rounded-full bg-transparent z-[47]"
   >
     <svg width="50" height="25" viewBox="0 0 23 23">
       <Path
