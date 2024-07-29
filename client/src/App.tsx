@@ -74,9 +74,8 @@ const App: React.FC = () => {
       />
       <About ref={aboutRef} />
       <Chess />
-      {/* <News />  */}
+      <News />
       <div ref={newsRef} id="news" className="absolute top-[3200px]">
-        sdnasojdnas
       </div>
       
     </div>

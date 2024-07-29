@@ -21,35 +21,75 @@ mongoose.connect(mongoURI)
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Define Mongoose Schema and Model
-interface IItem extends mongoose.Document {
-  name: string;
+interface IArticle extends mongoose.Document {
+  title: string;
+  content: string;
+  author_id: number;
+  created_at: Date;
+  updated_at: Date;
+  image_url: string;
 }
 
-const ItemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+const ArticleSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  author_id: { type: Number, required: true },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+  image_url: { type: String, required: true }
 });
 
-const Item = mongoose.model<IItem>('Item', ItemSchema);
+// Use the correct collection name
+const Article = mongoose.model<IArticle>('Article', ArticleSchema, 'Text&Metadata');
 
 // API Routes
-app.get('/api/items', async (req: Request, res: Response) => {
+app.get('/api/articles', async (req: Request, res: Response) => {
   try {
-    const items = await Item.find();
-    res.json(items);
+    const articles = await Article.find();
+    res.json(articles);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: (err as Error).message });
   }
 });
 
-app.post('/api/items', async (req: Request, res: Response) => {
-  const { name } = req.body;
+app.post('/api/articles', async (req: Request, res: Response) => {
+  const { title, content, author_id } = req.body;
 
   try {
-    const newItem = new Item({ name });
-    await newItem.save();
-    res.json(newItem);
+    const newArticle = new Article({ title, content, author_id });
+    await newArticle.save();
+    res.json(newArticle);
   } catch (err) {
-    res.status(400).json({ message: 'Failed to create item' });
+    res.status(400).json({ message: 'Failed to create article', error: (err as Error).message });
+  }
+});
+
+app.put('/api/articles/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title, content, author_id } = req.body;
+
+  try {
+    const updatedArticle = await Article.findByIdAndUpdate(
+      id,
+      { title, content, author_id, updated_at: new Date() },
+      { new: true }
+    );
+    if (!updatedArticle) return res.status(404).json({ message: 'Article not found' });
+    res.json(updatedArticle);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to update article', error: (err as Error).message });
+  }
+});
+
+app.delete('/api/articles/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await Article.findByIdAndDelete(id);
+    if (!result) return res.status(404).json({ message: 'Article not found' });
+    res.json({ message: 'Article deleted' });
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to delete article', error: (err as Error).message });
   }
 });
 

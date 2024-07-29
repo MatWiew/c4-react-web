@@ -1,7 +1,6 @@
 import * as React from "react";
 import { motion, Variants } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { References } from "../Types";
 
 const variants: Variants = {
   open: {
@@ -18,6 +17,10 @@ const variants: Variants = {
       y: { stiffness: 1000 },
     },
   },
+};
+
+type References = {
+  [key: number]: string | undefined;
 };
 
 type MenuItemProps = {

@@ -1,4 +1,3 @@
-// MenuButton.tsx
 import { useRef, useState, useEffect } from "react";
 import { motion, useCycle } from "framer-motion";
 import MenuToggle from "./MenuToggle";

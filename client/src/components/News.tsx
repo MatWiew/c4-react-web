@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Queen from "../assets/Queen";
+import Slider from "react-slick";
+import NewsSlider from "./NewsComponents/NewsSlider";
 
 const News = () => {
   const [queenSize, setQueenSize] = useState(
@@ -16,8 +18,8 @@ const News = () => {
 
   return (
     <>
-      <div className="relative top-[1000px]">
-        <Queen size={queenSize} />
+      <div className="relative top-[1000px] w-[40vw] left-5 bg-white h-[300px]">
+        <NewsSlider />
       </div>
     </>
   );

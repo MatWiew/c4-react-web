@@ -93,7 +93,7 @@ const Chess = () => {
         >
           <div className="flex lg:gap-[5%] gap-[10vw] justify-center h-full items-center px-5 max-md:flex-wrap">
             <a
-              href="https://www.chesskid.com/"
+              href="https://www.kurnik.pl/szachy/"
               target="_blank"
               rel="noopener noreferrer"
             >
