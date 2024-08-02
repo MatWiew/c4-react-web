@@ -59,7 +59,7 @@ const App: React.FC = () => {
         });
 
         observer.observe(ref.current);
-        ref.current.scrollIntoView({ behavior: "smooth" });
+        ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         resolve(); // Resolve immediately if ref is not available
       }
@@ -74,10 +74,12 @@ const App: React.FC = () => {
       />
       <About ref={aboutRef} />
       <Chess />
-      <News />
-      <div ref={newsRef} id="news" className="absolute top-[3200px]">
-      </div>
-      
+      <News ref={newsRef} />
+      <div
+        ref={tournamentsRef}
+        id="tournaments"
+        className="absolute top-[3700px]"
+      ></div>
     </div>
   );
 };

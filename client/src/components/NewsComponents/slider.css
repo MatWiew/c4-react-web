@@ -1,0 +1,7 @@
+/* slider.css */
+
+li.slick-active div {
+  color: #0066FF !important; /* Active dot color */
+  font-size: 1.3rem !important;
+  font-weight: bold !important;
+}

@@ -6,59 +6,62 @@ import chesscom from "../img/chesscom.png";
 import lichess from "../img/lichessorg.png";
 
 const Chess = () => {
-  // States for visibility
-  const [isVisibleFirst, setIsVisibleFirst] = useState(false);
-  const [isVisibleSecond, setIsVisibleSecond] = useState(false);
-
-  // Refs for the elements to be animated
-  const refFirst = useRef(null);
-  const refSecond = useRef(null);
-
-  useEffect(() => {
-    // Intersection observer for the first element
-    const observerFirst = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisibleFirst(true);
-          observerFirst.unobserve(entry.target); // Stop observing after visibility
-        }
-      },
-      { threshold: 0.1 } // Adjust threshold as needed
-    );
-
-    // Intersection observer for the second element
-    const observerSecond = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisibleSecond(true);
-          observerSecond.unobserve(entry.target); // Stop observing after visibility
-        }
-      },
-      { threshold: 0.1 } // Adjust threshold as needed
-    );
-
-    if (refFirst.current) {
-      observerFirst.observe(refFirst.current);
-    }
-
-    if (refSecond.current) {
-      observerSecond.observe(refSecond.current);
-    }
-
-    return () => {
-      if (refFirst.current) {
-        observerFirst.unobserve(refFirst.current);
+    // States for visibility
+    const [isVisibleFirst, setIsVisibleFirst] = useState(false);
+    const [isVisibleSecond, setIsVisibleSecond] = useState(false);
+  
+    // Refs for the elements to be animated
+    const refFirst = useRef(null);
+    const refSecond = useRef(null);
+  
+    useEffect(() => {
+      const currentRefFirst = refFirst.current;
+      const currentRefSecond = refSecond.current;
+  
+      // Intersection observer for the first element
+      const observerFirst = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisibleFirst(true);
+            observerFirst.unobserve(entry.target); // Stop observing after visibility
+          }
+        },
+        { threshold: 0.1 } // Adjust threshold as needed
+      );
+  
+      // Intersection observer for the second element
+      const observerSecond = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisibleSecond(true);
+            observerSecond.unobserve(entry.target); // Stop observing after visibility
+          }
+        },
+        { threshold: 0.1 } // Adjust threshold as needed
+      );
+  
+      if (currentRefFirst) {
+        observerFirst.observe(currentRefFirst);
       }
-      if (refSecond.current) {
-        observerSecond.unobserve(refSecond.current);
+  
+      if (currentRefSecond) {
+        observerSecond.observe(currentRefSecond);
       }
-    };
-  }, []);
+  
+      return () => {
+        if (currentRefFirst) {
+          observerFirst.unobserve(currentRefFirst);
+        }
+        if (currentRefSecond) {
+          observerSecond.unobserve(currentRefSecond);
+        }
+      };
+    }, []);
 
   return (
     <>
       <motion.div
-        className="lg:relative absolute w-full lg:top-[480px] top-[750px] max-w-[1200px] mx-auto"
+        className="lg:relative relative w-full lg:top-[480px] top-[200px] max-w-[1200px] mx-auto"
         ref={refFirst}
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: isVisibleFirst ? 1 : 0, y: isVisibleFirst ? 0 : 100 }}
@@ -83,7 +86,7 @@ const Chess = () => {
           </div>
         </div>
       </motion.div>
-      <div className="lg:relative absolute flex justify-between lg:h-[130px] h-[15vw] lg:top-[570px] top-[1200px] w-full overflow-x-clip">
+      <div className="relative absolute flex justify-between lg:h-[130px] h-[15vw] lg:top-[570px] top-[16rem] w-full overflow-x-clip">
         <motion.div
           className="relative lg:h-[130px] h-[15vw] max-h-[100px] lg:w-[50%] w-full max-w-[1200px] lg:rounded-r-lg bg-zinc-800"
           ref={refSecond}

@@ -4,20 +4,20 @@ import QuestionMark from "../assets/QuestionMark";
 
 const About = forwardRef<HTMLDivElement>((props, ref) => {
   const [kingSize, setKingSize] = useState(
-    window.innerWidth > 1024 ? 385 : 290
+    window.innerWidth > 1023 ? 385 : 290
   );
   const [questionMarkSize, setQuestionMarkSize] = useState(
-    window.innerWidth > 1024 ? 400 : 320
+    window.innerWidth > 1023 ? 400 : 320
   );
   const [bp, setBp] = useState(
-    window.innerWidth > 1024 ? true : false
+    window.innerWidth > 1023 ? true : false
   );
 
   useEffect(() => {
     const handleResize = () => {
-      setKingSize(window.innerWidth > 1024 ? 385 : 290);
-      setQuestionMarkSize(window.innerWidth > 1024 ? 400 : 320);
-      setBp(window.innerWidth > 1024 ? true : false);
+      setKingSize(window.innerWidth > 1023 ? 385 : 290);
+      setQuestionMarkSize(window.innerWidth > 1023 ? 400 : 320);
+      setBp(window.innerWidth > 1023 ? true : false);
     };
 
     window.addEventListener("resize", handleResize);
@@ -32,7 +32,7 @@ const About = forwardRef<HTMLDivElement>((props, ref) => {
             <div className="lg:text-5xl text-4xl italic font-black text-white lg:max-w-[45vw] max-w-[100vw]">
               Kim jesteśmy
             </div>
-            <div className="lg:mt-10 mt-5 lg:text-lg text-sm leading-7 text-zinc-400 lg:max-w-[45vw] max-w-[100vw] mx-9 lg:mx-0">
+            <div className="lg:mt-10 mt-5 lg:text-lg text-sm leading-7 text-zinc-400 lg:max-w-[45vw] max-lg:h-[300px] max-w-[100vw] mx-9 lg:mx-0">
             Fundacja C4 to klub szachowy mający na celu zrzeszanie szachistów i popularyzowanie gry w szachy. Nasza misja to wspieranie rozwoju umiejętności strategicznych i intelektualnych wśród graczy w każdym wieku. Organizujemy turnieje, warsztaty i treningi, aby doskonalić techniki gry i budować społeczność pasjonatów szachów.
             </div>
           </div>

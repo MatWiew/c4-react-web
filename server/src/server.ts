@@ -42,6 +42,28 @@ const ArticleSchema = new mongoose.Schema({
 // Use the correct collection name
 const Article = mongoose.model<IArticle>('Article', ArticleSchema, 'Text&Metadata');
 
+interface ITournament extends mongoose.Document {
+  name: string;
+  date: Date;
+  description: string;
+  type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+}
+
+// Define the Tournament schema
+const TournamentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  date: { type: Date, required: true },
+  description: { type: String, required: true },
+  type: { 
+    type: String, 
+    enum: ['blitz', 'rapid', 'classical', 'bullet'], 
+    required: true 
+  }
+});
+
+// Create the Tournament model with the specified collection name
+const Tournament = mongoose.model<ITournament>('Tournament', TournamentSchema, 'TournamentsData');
+
 // API Routes
 app.get('/api/articles', async (req: Request, res: Response) => {
   try {

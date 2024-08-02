@@ -14,7 +14,7 @@
 
 body {
   --sb-track-color: #26292b;
-  --sb-thumb-color: #7000ff;
+  --sb-thumb-color: #aaaaaa;
   --sb-size: 10px;
 }
 
@@ -61,17 +61,18 @@ body {
   );
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   body {
-    background-size: 100% 4443px;
+    background-size: 100% 6743px;
     background-position: 0px 0px;
     background-image: linear-gradient(
       180deg,
       #000000 0%,
       #0c0416 4%,
-      #0f041c 10%,
-      #1a1a1a 21%,
-      #000a1a 39%,
+      #0f041c 5%,
+      #1a1a1a 14%,
+      #1a1a1a 18%,
+      #000a1a 32%,
       #001d18 52%,
       #011b04 63%,
       #202500 75%,
