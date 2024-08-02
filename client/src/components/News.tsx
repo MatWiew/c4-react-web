@@ -63,8 +63,17 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
     const handleResize = () => {
       setQueenSize(window.innerWidth > 767 ? 385 : 550);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    // Call handleResize initially to set the correct size on mount
+    handleResize();
+
+    // Add event listeners
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      // Clean up event listeners on unmount
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
@@ -93,7 +102,7 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
         }}
         transition={{ duration: 0.5 }}
       >
-        <div ref={ref} id="news" className="flex-row max-md:absolute">
+        <div ref={ref} id="news" className="flex-row max-md:absolute max-md:opacity-25">
           <Queen size={queenSize} />
         </div>
         <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] bg-black rounded-lg ">
