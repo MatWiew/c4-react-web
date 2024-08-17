@@ -105,7 +105,7 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
         <div ref={ref} id="news" className="flex-row max-md:absolute max-md:opacity-25">
           <Queen size={queenSize} />
         </div>
-        <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] bg-black rounded-lg ">
+        <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] rounded-lg ">
           <NewsSlider />
         </div>
       </motion.div>

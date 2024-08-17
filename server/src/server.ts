@@ -40,7 +40,7 @@ const ArticleSchema = new mongoose.Schema({
 });
 
 // Use the correct collection name
-const Article = mongoose.model<IArticle>('Article', ArticleSchema, 'Text&Metadata');
+const Article = mongoose.model<IArticle>('Article', ArticleSchema, 'NewsText&Metadata');
 
 interface ITournament extends mongoose.Document {
   name: string;
@@ -64,7 +64,7 @@ const TournamentSchema = new mongoose.Schema({
 // Create the Tournament model with the specified collection name
 const Tournament = mongoose.model<ITournament>('Tournament', TournamentSchema, 'TournamentsData');
 
-// API Routes
+// API Routes for articles
 app.get('/api/articles', async (req: Request, res: Response) => {
   try {
     const articles = await Article.find();
@@ -112,6 +112,57 @@ app.delete('/api/articles/:id', async (req: Request, res: Response) => {
     res.json({ message: 'Article deleted' });
   } catch (err) {
     res.status(400).json({ message: 'Failed to delete article', error: (err as Error).message });
+  }
+});
+
+// API Routes for Tournaments
+app.get('/api/tournaments', async (req: Request, res: Response) => {
+  try {
+    const tournaments = await Tournament.find();
+    res.json(tournaments);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: (err as Error).message });
+  }
+});
+
+app.post('/api/tournaments', async (req: Request, res: Response) => {
+  const { name, date, description, type } = req.body;
+
+  try {
+    const newTournament = new Tournament({ name, date, description, type });
+    await newTournament.save();
+    res.json(newTournament);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to create tournament', error: (err as Error).message });
+  }
+});
+
+app.put('/api/tournaments/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, date, description, type } = req.body;
+
+  try {
+    const updatedTournament = await Tournament.findByIdAndUpdate(
+      id,
+      { name, date, description, type },
+      { new: true }
+    );
+    if (!updatedTournament) return res.status(404).json({ message: 'Tournament not found' });
+    res.json(updatedTournament);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to update tournament', error: (err as Error).message });
+  }
+});
+
+app.delete('/api/tournaments/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await Tournament.findByIdAndDelete(id);
+    if (!result) return res.status(404).json({ message: 'Tournament not found' });
+    res.json({ message: 'Tournament deleted' });
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to delete tournament', error: (err as Error).message });
   }
 });
 

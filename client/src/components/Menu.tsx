@@ -20,8 +20,8 @@ const Menu: React.FC<MenuProps> = ({
 
   const linkClasses = (section: string) =>
     activeSection === section
-      ? "font-semibold text-white block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
-      : "text-gray-400 block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6";
+      ? "font-semibold important-white-color block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6"
+      : "important-text-gray block mt-4 lg:inline-block lg:mt-0 font-sans text-2xl mr-6";
 
   const { scrollYProgress } = useScroll();
 
@@ -55,6 +55,7 @@ const Menu: React.FC<MenuProps> = ({
     [0, 0.1], // Input range: from 0% to 5% of scroll progress
     ["#fff", "rgba(255, 255, 255, 0.5)"]
   );
+  
 
   return (
     <nav className="fixed flex items-center justify-between p-6 mx-auto z-[40] w-full">

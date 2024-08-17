@@ -91,6 +91,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
           padding: "0.5rem 1rem",
           lineHeight: "1.5rem",
           textDecoration: "none",
+          color: "white"
         }}
       >
         {menuItemsTexts[i % menuItemsTexts.length]}

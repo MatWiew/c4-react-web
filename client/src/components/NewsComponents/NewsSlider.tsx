@@ -68,12 +68,12 @@ const NewsSlider: React.FC = () => {
         articles.map((article) => (
           <div
             key={article._id}
-            className="relative md:h-[385px] h-[300px] rounded-lg overflow-hidden"
+            className="relative md:h-[385px] h-[300px] rounded-lg border-[2px] border-transparent overflow-hidden"
           >
             <img
               src={article.image_url}
               alt={article.title}
-              className="absolute inset-0 w-full h-full object-cover mx-auto z-[-1] rounded-lg border border-transparent"
+              className="absolute inset-0 w-full h-full object-cover mx-auto rounded-lg"
             />
 
             <div className="flex flex-col text-center justify-between h-full rounded-lg">
@@ -85,8 +85,8 @@ const NewsSlider: React.FC = () => {
               </p>
             </div>
             <div className="absolute inset-0 pointer-events-none rounded-lg">
-              <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b h-[90%] from-black/90 from-10% z-[1]"></div>
-              <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t h-[90%] from-black/90 from-10% z-[1]"></div>
+              <div className="absolute inset-0 top-0 h-full bg-gradient-to-b h-[90%] from-black/90 from-10% z-[1]"></div>
+              <div className="absolute inset-0 bottom-0 h-full bg-gradient-to-t h-[90%] from-black/90 from-10% z-[1]"></div>
             </div>
           </div>
         ))

@@ -37,6 +37,14 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
+.important-white-color {
+  color: white !important;
+}
+
+.important-text-gray{
+  color: #9ca3af !important;
+}
+
 /* Styling Scrollbar */
 
 * {
@@ -72,8 +80,8 @@ body {
       #0f041c 5%,
       #1a1a1a 14%,
       #1a1a1a 18%,
-      #000a1a 32%,
-      #001d18 52%,
+      #000a1a 31%,
+      #001d18 48%,
       #011b04 63%,
       #202500 75%,
       #000000 86%,

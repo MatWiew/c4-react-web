@@ -5,6 +5,7 @@ import About from "./components/About";
 import Chess from "./components/Chess";
 import News from "./components/News";
 import useInView from "./hooks/useInView";
+import Tournaments from "./components/Tournaments";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -75,10 +76,11 @@ const App: React.FC = () => {
       <About ref={aboutRef} />
       <Chess />
       <News ref={newsRef} />
+      <Tournaments ref={tournamentsRef} />
       <div
-        ref={tournamentsRef}
-        id="tournaments"
-        className="absolute top-[3700px]"
+        ref={clubRef}
+        id="club"
+        className="absolute top-[4700px]"
       ></div>
     </div>
   );

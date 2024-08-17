@@ -1,0 +1,158 @@
+.rs-calendar {
+  border-radius: 10px;
+  background-color: #282d35;
+}
+
+@media not all and (min-width: 1535px) { 
+  .rs-calendar {
+  background-color: rgba(40,45,53, 0.7);
+  }
+}
+
+.rs-calendar-body {
+  color: #fff;
+}
+
+.rs-calendar-table-cell-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: 0.1s ease-in-out;
+}
+
+.rs-calendar-table-cell-content:hover {
+  transform: scale(1.1);
+  background-color: transparent !important;
+}
+
+.rs-calendar-table-cell-day {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.5rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  cursor: pointer;
+  transform: scale(2);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rs-calendar-table-cell-selected
+  .rs-calendar-table-cell-content
+  .rs-calendar-table-cell-day {
+  border: solid 1px #fff;
+}
+
+.rs-calendar-table-cell-is-today .rs-calendar-table-cell-day {
+  background-color: black !important;
+}
+
+.rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
+  box-shadow: none !important;
+}
+.rs-calendar-table-cell-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rs-calendar-table-header-row {
+  opacity: 0;
+}
+
+.rs-calendar-table-header {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  top: 99px;
+}
+
+.rs-calendar-table-header-cell-content {
+  font-size: 0.8rem;
+  width: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: 400;
+}
+
+.rs-calendar-btn-today {
+  display: none;
+}
+
+.rs-calendar-header-month-toolbar {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rs-calendar-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100% !important;
+  height: 50px;
+  padding-bottom: 10px !important;
+  top: 89px;
+}
+
+.rs-calendar-header-title {
+  font-size: 1.4rem !important;
+  pointer-events: none;
+  opacity: 0;
+  width: 20vw;
+}
+
+@media (max-width: 768px) {
+  .rs-calendar-header-title {
+    font-size: 1.4rem !important;
+    pointer-events: none;
+    opacity: 0;
+    width: 50vw;
+  }
+}
+
+
+.rs-calendar-month-name {
+  position: relative;
+  font-size: 1.4rem !important;
+  pointer-events: none;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 2;
+}
+
+.rs-calendar-header-forward,
+.rs-calendar-header-backward {
+  transform: scale(1.5);
+  bottom: 89px;
+}
+button {
+  color: white !important;
+}
+
+button:hover {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+button:visited {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+button:focus {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+button:active {
+  background-color: transparent !important;
+  color: white !important;
+}
