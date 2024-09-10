@@ -7,10 +7,11 @@ import CustomCalendarHeader from './CustomCalendarHeader';
 import CustomMonthHeader from './CustomMonthHeader';
 
 interface Event {
-  date: Date;
   name: string;
-  description: string;
-  type: "blitz" | "rapid" | "classical" | "bullet";
+  date: Date;
+  type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+  round_number: number;
+  place: string;
 }
 
 const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void }> = ({ onDateChange }) => {
@@ -82,7 +83,7 @@ const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void
   const year = currentDate.getFullYear();
 
   return (
-    <div className="relative lg:w-[35vw] max-w-[500px] w-[80vw] top-[-40px]">
+    <div className="relative max-w-[500px] w-full top-[-40px]">
       <CustomMonthHeader month={month} year={year} />
       <CustomCalendarHeader />
       <Calendar 

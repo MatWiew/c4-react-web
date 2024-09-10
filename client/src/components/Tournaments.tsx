@@ -7,13 +7,14 @@ import Pawn from "../assets/Pawn";
 interface Event {
   name: string;
   date: Date;
-  description: string;
-  type: "blitz" | "rapid" | "classical" | "bullet";
+  type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+  round_number: number;
+  place: string;
 }
 
 const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
   const [knightSize, setKnightSize] = useState(
-    window.innerWidth > 1535 ? 420 : 600
+    window.innerWidth > 1535 ? 420 : 550
   );
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -69,7 +70,7 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setKnightSize(window.innerWidth > 1535 ? 420 : 600);
+      setKnightSize(window.innerWidth > 1535 ? 420 : 550);
     };
 
     handleResize();
@@ -92,7 +93,7 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <div
       id="tournaments"
-      className="relative flex items-center justify-between w-90 mx-[7rem] lg:top-[1850px] md:top-[1140px] top-[1300px]"
+      className="relative flex items-center justify-between w-90 mx-[7rem] max-lg:mx-[1rem] lg:top-[1850px] md:top-[1140px] top-[1300px]"
       ref={ref}
     >
       <motion.span
@@ -108,10 +109,10 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
           TURNIEJE
         </motion.span>
       <div className="flex max-lg:flex-col lg:flex-row max-lg:gap-0 gap-[2vw] max-2xl:justify-center max-2xl:w-full z-10">
-        <div className="flex max-lg:mx-auto 2xl:w-[500px] w-[450px]">
+        <div className="flex max-lg:mx-auto 2xl:w-[500px] max-w-[450px] max-lg:w-full">
           <CalendarC onDateChange={handleDateChange} />
         </div>
-        <div className="relative max-lg:mx-auto 2xl:w-[30vw] w-[450px] max-w-[1000px] h-[400px] bg-black max-2xl:bg-opacity-70 rounded-lg top-[45px] max-lg:top-0 p-4 text-white">
+        <div className="relative max-lg:mx-auto 2xl:w-[30vw] max-w-[450px] max-lg:w-full max-w-[1000px] h-[400px] bg-black max-2xl:bg-opacity-70 rounded-lg top-[45px] max-lg:top-0 p-4 text-white">
           <div
             className="absolute flex justify-center items-center rounded-[100%] w-[60px] h-[60px] top-[-30px] left-[20px]"
             style={{ backgroundColor: "#282D35" }}
@@ -121,21 +122,24 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
           <div className="flex py-9 px-3 h-full">
             {selectedEvent ? (
               <div>
-                <p className="text-3xl font-bold mb-5">
+                <p className="text-xl font-bold mb-5">
                   {selectedEvent.name}
                 </p>
-                <p className="line-clamp-[11] text-justify text-gray-300">
-                  {selectedEvent.description}
+                <p className="italic mt-3 text-gray-200">
+                  Liczba rund: {selectedEvent.round_number}
                 </p>
-                <p className="italic mt-3 text-gray-400">
+                <p className="italic mt-3 text-gray-200">
                   Typ: {selectedEvent.type}
                 </p>
-                <p className="mt-1 italic text-gray-400">
+                <p className="italic mt-3 text-gray-200">
                   Data:{" "}
                   {new Intl.DateTimeFormat("pl-PL", {
                     dateStyle: "short", // or 'medium', 'long' depending on the level of detail you want
                     timeStyle: "short", // or 'medium', 'long' for more detail
                   }).format(selectedEvent.date)}
+                </p>
+                <p className="italic mt-3 text-gray-400">
+                  Miejsce: {selectedEvent.place}
                 </p>
               </div>
             ) : (

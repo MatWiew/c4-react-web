@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
+import { Int32 } from 'mongodb';
 
 dotenv.config();
 
@@ -45,20 +46,22 @@ const Article = mongoose.model<IArticle>('Article', ArticleSchema, 'NewsText&Met
 interface ITournament extends mongoose.Document {
   name: string;
   date: Date;
-  description: string;
   type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+  round_number: Int32;
+  place: String;
 }
 
 // Define the Tournament schema
 const TournamentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
-  description: { type: String, required: true },
   type: { 
     type: String, 
     enum: ['blitz', 'rapid', 'classical', 'bullet'], 
     required: true 
-  }
+  },
+  round_number: { type: Int32, required: true },
+  place: { type: String, required: true}
 });
 
 // Create the Tournament model with the specified collection name
