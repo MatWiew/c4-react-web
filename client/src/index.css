@@ -62,8 +62,8 @@ body {
     #1a1a1a 21%,
     #000a1a 39%,
     #001d18 52%,
-    #011b04 63%,
-    #202500 75%,
+    #011b04 65%,
+    #202500 85%,
     #000000 86%,
     #000000 100%
   );
@@ -71,7 +71,7 @@ body {
 
 @media (max-width: 1023px) {
   body {
-    background-size: 100% 6743px;
+    background-size: 100% 6943px;
     background-position: 0px 0px;
     background-image: linear-gradient(
       180deg,
@@ -83,7 +83,7 @@ body {
       #000a1a 31%,
       #001d18 48%,
       #011b04 63%,
-      #202500 75%,
+      #202500 85%,
       #000000 86%,
       #000000 100%
     );

@@ -7,9 +7,10 @@ import Pawn from "../assets/Pawn";
 interface Event {
   name: string;
   date: Date;
-  type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+  type: "blitz" | "rapid" | "classical" | "bullet";
   round_number: number;
   place: string;
+  page: string;
 }
 
 const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
@@ -97,50 +98,79 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
       ref={ref}
     >
       <motion.span
-          ref={refFirst}
-          className="absolute w-full text-outline font-extrabold lg:text-[9vw] text-[10vw] text-center lg:top-[-300px] top-[-150px]"
-          initial={{ opacity: 0, bottom: -50 }}
-          animate={{
-            opacity: isVisibleFirst ? 1 : 0,
-            bottom: isVisibleFirst ? 0 : -100,
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          TURNIEJE
-        </motion.span>
-      <div className="flex max-lg:flex-col lg:flex-row max-lg:gap-0 gap-[2vw] max-2xl:justify-center max-2xl:w-full z-10">
+        ref={refFirst}
+        className="absolute w-full text-outline font-extrabold lg:text-[9vw] text-[10vw] text-center lg:top-[-300px] top-[-150px]"
+        initial={{ opacity: 0, bottom: -50 }}
+        animate={{
+          opacity: isVisibleFirst ? 1 : 0,
+          bottom: isVisibleFirst ? 0 : -100,
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        TURNIEJE
+      </motion.span>
+      <motion.div
+        ref={refSecond}
+        initial={{
+          opacity: 0,
+          width: "120%",
+          transform: "translateY(100px)",
+        }}
+        animate={{
+          opacity: isVisibleSecond ? 1 : 0,
+          transform: isVisibleSecond ? "translateY(0)" : "translateY(100px)",
+          width: "100%",
+          gap: "2vw",
+        }}
+        transition={{ duration: 0.8 }}
+        className="flex max-lg:flex-col lg:flex-row max-lg:gap-0 gap-[2vw] max-2xl:justify-center max-2xl:w-[full] z-10"
+      >
         <div className="flex max-lg:mx-auto 2xl:w-[500px] max-w-[450px] max-lg:w-full">
           <CalendarC onDateChange={handleDateChange} />
         </div>
-        <div className="relative max-lg:mx-auto 2xl:w-[30vw] max-w-[450px] max-lg:w-full max-w-[1000px] h-[400px] bg-black max-2xl:bg-opacity-70 rounded-lg top-[45px] max-lg:top-0 p-4 text-white">
+        <div className="relative max-lg:mx-auto 2xl:w-[30vw] max-w-[450px] max-lg:w-full max-w-[1000px] h-[350px] bg-black max-2xl:bg-opacity-70 rounded-lg top-[70px] max-lg:top-0 p-4 text-white">
           <div
             className="absolute flex justify-center items-center rounded-[100%] w-[60px] h-[60px] top-[-30px] left-[20px]"
             style={{ backgroundColor: "#282D35" }}
           >
             <Pawn size={30} className="" />
           </div>
-          <div className="flex py-9 px-3 h-full">
+          <div className="flex py-9 px-3 h-full text-center">
             {selectedEvent ? (
-              <div>
-                <p className="text-xl font-bold mb-5">
-                  {selectedEvent.name}
+              <div className="mx-auto">
+                <p className="text-xl font-bold mb-5">{selectedEvent.name}</p>
+                <p className="italic text-base mt-8">
+                  <span className="text-white font-bold">Liczba rund:</span>{" "}
+                  <span className="text-gray-200">
+                    {selectedEvent.round_number}
+                  </span>
                 </p>
-                <p className="italic mt-3 text-gray-200">
-                  Liczba rund: {selectedEvent.round_number}
+                <p className="italic text-base mt-5">
+                  <span className="text-white font-bold">Typ:</span>{" "}
+                  <span className="text-gray-200">{selectedEvent.type}</span>
                 </p>
-                <p className="italic mt-3 text-gray-200">
-                  Typ: {selectedEvent.type}
+                <p className="italic text-base mt-5">
+                  <span className="text-white font-bold">Data:</span>{" "}
+                  <span className="text-gray-200">
+                    {new Intl.DateTimeFormat("pl-PL", {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    }).format(selectedEvent.date)}
+                  </span>
                 </p>
-                <p className="italic mt-3 text-gray-200">
-                  Data:{" "}
-                  {new Intl.DateTimeFormat("pl-PL", {
-                    dateStyle: "short", // or 'medium', 'long' depending on the level of detail you want
-                    timeStyle: "short", // or 'medium', 'long' for more detail
-                  }).format(selectedEvent.date)}
+                <p className="italic text-base mt-5">
+                  <span className="text-white font-bold">Miejsce:</span>{" "}
+                  <span className="text-gray-200">{selectedEvent.place}</span>
                 </p>
-                <p className="italic mt-3 text-gray-400">
-                  Miejsce: {selectedEvent.place}
-                </p>
+                <motion.a
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  href={selectedEvent.page}
+                  target="_blank"
+                  className="relative text-white font-bold top-[20px]"
+                >
+                  Strona turnieju
+                </motion.a>
               </div>
             ) : (
               <p className="flex-grow w-full text-center my-auto text-lg">
@@ -150,10 +180,18 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
             )}
           </div>
         </div>
-      </div>
-      <div className="absolute 2xl:h-[420px] h-[600px] rounded-lg 2xl:right-0 mx-auto w-full">
+      </motion.div>
+      <motion.div
+        className="absolute 2xl:h-[420px] h-[600px] rounded-lg 2xl:right-0 mx-auto w-full"
+        initial={{ opacity: 0, right: "-50px" }}
+        animate={{
+          opacity: isVisibleSecond ? 1 : 0,
+          right: isVisibleSecond ? "0" : "-50px",
+        }}
+        transition={{ duration: 0.6 }}
+      >
         <Knight size={knightSize} />
-      </div>
+      </motion.div>
     </div>
   );
 });

@@ -12,6 +12,7 @@ interface Event {
   type: 'blitz' | 'rapid' | 'classical' | 'bullet';
   round_number: number;
   place: string;
+  page: string;
 }
 
 const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void }> = ({ onDateChange }) => {

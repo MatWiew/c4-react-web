@@ -3,9 +3,9 @@
   background-color: #282d35;
 }
 
-@media not all and (min-width: 1535px) { 
+@media not all and (min-width: 1535px) {
   .rs-calendar {
-  background-color: rgba(40,45,53, 0.7);
+    background-color: rgba(40, 45, 53, 0.7);
   }
 }
 
@@ -105,7 +105,7 @@
   font-size: 1.4rem !important;
   pointer-events: none;
   opacity: 0;
-  width: 20vw;
+  width: 250px;
 }
 
 @media (max-width: 768px) {
@@ -113,10 +113,9 @@
     font-size: 1.4rem !important;
     pointer-events: none;
     opacity: 0;
-    width: 50vw;
+    width: 240px;
   }
 }
-
 
 .rs-calendar-month-name {
   position: relative;
@@ -133,6 +132,7 @@
   transform: scale(1.5);
   bottom: 89px;
 }
+
 button {
   color: white !important;
 }
