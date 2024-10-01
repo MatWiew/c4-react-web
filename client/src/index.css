@@ -41,7 +41,7 @@ body::-webkit-scrollbar-thumb {
   color: white !important;
 }
 
-.important-text-gray{
+.important-text-gray {
   color: #9ca3af !important;
 }
 
@@ -49,6 +49,10 @@ body::-webkit-scrollbar-thumb {
 
 * {
   font-family: "Noto Sans", "sans-serif";
+}
+
+a {
+  text-decoration: none;
 }
 
 body {
@@ -63,8 +67,8 @@ body {
     #000a1a 39%,
     #001d18 52%,
     #011b04 65%,
-    #202500 85%,
-    #000000 86%,
+    #202500 77%,
+    #000000 95%,
     #000000 100%
   );
 }

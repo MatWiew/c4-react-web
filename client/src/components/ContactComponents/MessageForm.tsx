@@ -82,7 +82,7 @@ const MessageForm: React.FC = () => {
         className="block mx-auto bg-transparent text-gray-300 w-full m-5 border-b border-t-0 border-r-0 border-l-0 border-gray-500 focus:border-b-2 focus:border-gray-500 focus:ring-0"
       />
       {nameError && (
-        <p className="absolute text-red-500 text-sm top-[230px]">{nameError}</p>
+        <p className="absolute text-red-500 text-sm lg:top-[193px] md:top-[193px] top-[233px]">{nameError}</p>
       )}
       <input
         type="email"
@@ -92,7 +92,7 @@ const MessageForm: React.FC = () => {
         className="block mx-auto bg-transparent text-gray-300 w-full m-5 border-b border-t-0 border-r-0 border-l-0 border-gray-500 focus:border-b-2 focus:border-gray-500 focus:ring-0"
       />
       {error && (
-        <p className="absolute text-red-500 text-sm top-[291px]">{error}</p>
+        <p className="absolute text-red-500 text-sm lg:top-[253px] md:top-[253px] top-[293px]">{error}</p>
       )}
       <label className="text-gray-500 mx-auto text-base ml-3">Wiadomość</label>
       <textarea

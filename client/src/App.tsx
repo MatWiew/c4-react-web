@@ -8,6 +8,8 @@ import useInView from "./hooks/useInView";
 import Tournaments from "./components/Tournaments";
 import Club from "./components/Club";
 import Contact from "./components/Contact";
+import Footer from "./components/Footer";
+import FootEnd from "./components/FooterComponents/FootEnd";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -71,16 +73,28 @@ const App: React.FC = () => {
 
   return (
     <div className="App lg:h-[7743px] h-[4443px] snap-y snap-mandatory">
-      <Menu
-        scrollToDesiredContent={scrollToDesiredContent}
-        activeSection={activeSection}
-      />
-      <About ref={aboutRef} />
-      <Chess />
-      <News ref={newsRef} />
-      <Tournaments ref={tournamentsRef} />
-      <Club ref={clubRef} />
-      <Contact ref={contactRef} />
+      <div className="min-h-full flex flex-col justify-between">
+        <main className="flex-grow">
+          <Menu
+            scrollToDesiredContent={scrollToDesiredContent}
+            activeSection={activeSection}
+          />
+          <About ref={aboutRef} />
+          <Chess />
+          <News ref={newsRef} />
+          <Tournaments ref={tournamentsRef} />
+          <Club ref={clubRef} />
+          <Contact ref={contactRef} />
+          <Footer />
+        </main>
+
+        <div className="relative">
+          <FootEnd
+            scrollToDesiredContent={scrollToDesiredContent}
+            activeSection={activeSection}
+          />
+        </div>
+      </div>
     </div>
   );
 };

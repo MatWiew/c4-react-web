@@ -5,7 +5,7 @@ import Rook from "../assets/Rook";
 
 const Contact = forwardRef<HTMLDivElement>((props, ref) => {
   const [rookSize, setRookSize] = useState(
-    window.innerWidth > 1279 ? 350 : 450
+    window.innerWidth > 1023 ? 350 : 290
   );
 
   // States for visibility
@@ -60,7 +60,7 @@ const Contact = forwardRef<HTMLDivElement>((props, ref) => {
 
   useEffect(() => {
     const handleResize = () => {
-        setRookSize(window.innerWidth > 1279 ? 350 : 450);
+        setRookSize(window.innerWidth > 1023 ? 350 : 290);
     };
 
     handleResize();
@@ -73,7 +73,7 @@ const Contact = forwardRef<HTMLDivElement>((props, ref) => {
   }, []);
 
   return (
-    <div id="contact" ref={ref} className="relative top-[2850px]">
+    <div id="contact" ref={ref} className="relative overflow-x-clip lg:top-[2850px] md:top-[1900px] top-[2000px]">
       <motion.span
         ref={refFirst}
         className="absolute w-full text-outline font-extrabold lg:text-[9vw] text-[10vw] text-center xl:top-[-270px] lg:top-[-150px] top-[-150px] z-[-10]"
@@ -86,11 +86,11 @@ const Contact = forwardRef<HTMLDivElement>((props, ref) => {
       >
         KONTAKT
       </motion.span>
-      <div className="flex h-[596px]">
-      <div className="w-2/5 mx-auto">
+      <div className="flex h-[520px]">
+      <div className="w-2/5 max-lg:relative mx-auto lg:min-w-[570px] max-lg:w-5/6 z-10">
         <MessageComponent />
       </div>
-      <div className="flex mx-auto my-auto">
+      <div className="flex max-lg:absolute max-lg:w-full mx-auto my-auto max-lg:top-[160px] min-[388px]:top-[200px] max-[388px]:top-[220px] ">
         <Rook size={rookSize} /> 
       </div>
       </div>
