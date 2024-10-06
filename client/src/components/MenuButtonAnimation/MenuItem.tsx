@@ -35,11 +35,10 @@ const menuItemsTexts = [
   "Aktualności",
   "Turnieje",
   "Klub",
-  "Sklep",
   "Kontakt",
 ];
 
-const to = ["/", "/news", "/tournaments", "/club", "/shop", "/contact"];
+const to = ["/", "/news", "/tournaments", "/club", "/contact"];
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   i,
@@ -53,8 +52,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     1: "news",
     2: "tournaments",
     3: "club",
-    4: "shop",
-    5: "contact",
+    4: "contact",
   };
 
   const handleClick = async () => {

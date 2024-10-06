@@ -56,7 +56,7 @@ a {
 }
 
 body {
-  background-size: 100% 7743px;
+  background-size: 100% 7843px;
   background-position: 0px 0px;
   background-image: linear-gradient(
     180deg,
@@ -87,7 +87,7 @@ body {
       #000a1a 31%,
       #001d18 48%,
       #011b04 63%,
-      #202500 85%,
+      #202500 75%,
       #000000 86%,
       #000000 100%
     );

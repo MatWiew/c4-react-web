@@ -38,18 +38,18 @@ const sponsorData: SponsorData[] = [
 const SponsorSection: React.FC = () => {
   return (
     <section className="flex flex-col items-center">
-      <h2 className="z-10 mt-0 text-6xl font-black text-center text-white max-md:max-w-full max-md:text-4xl">
+      <h2 className="z-10 mt-0 md:text-[3rem] text-[2rem] font-black text-center text-white">
         Nasi sponsorzy:
       </h2>
-      <div className="mt-12 w-full max-w-[881px] max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
+      <div className="mt-12 w-full max-w-[881px]">
+        <div className="flex gap-5">
           {sponsorData.slice(0, 2).map((sponsor, index) => (
             <SponsorImage key={index} {...sponsor} />
           ))}
         </div>
       </div>
-      <div className="self-stretch mt-16 w-full max-md:mt-10 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
+      <div className="self-stretch mt-16 w-full">
+        <div className="flex gap-5">
           {sponsorData.slice(2).map((sponsor, index) => (
             <SponsorImage key={index + 2} {...sponsor} />
           ))}

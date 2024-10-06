@@ -13,7 +13,6 @@ const Menu: React.FC<MenuProps> = ({
   scrollToDesiredContent,
   activeSection,
 }) => {
-
   const handleLinkClick = (section: string) => () => {
     scrollToDesiredContent(section);
   };
@@ -55,26 +54,22 @@ const Menu: React.FC<MenuProps> = ({
     [0, 0.1], // Input range: from 0% to 5% of scroll progress
     ["#fff", "rgba(255, 255, 255, 0.5)"]
   );
-  
 
   return (
     <nav className="fixed flex items-center justify-between p-6 mx-auto z-[40] w-full">
-      <div className="flex w-full justify-between items-center lg:hidden"
-      >
+      <div className="flex w-full justify-between items-center lg:hidden overflow-x-clip">
         <MenuButton
           scrollToDesiredContent={scrollToDesiredContent}
           sectionInView={activeSection}
         />
-        <div
-          className="absolute items-center text-white top-0 right-0"
-        >
+        <div className="absolute items-center text-white top-0 right-0">
           <ClubLogo size={"7rem"} color={color} />
         </div>
       </div>
       <div className="hidden lg:flex items-center justify-between w-full">
         <motion.div
           className="absolute items-center text-white top-0 left-0"
-          style={{ scale: logoScale, transformOrigin: "left", y: logoY}}
+          style={{ scale: logoScale, transformOrigin: "left", y: logoY }}
         >
           <ClubLogo size={"200px"} color={color} />
         </motion.div>
@@ -136,20 +131,6 @@ const Menu: React.FC<MenuProps> = ({
               className="inline-block"
             >
               Klub
-            </motion.span>
-          </NavLink>
-          <NavLink
-            to="/shop"
-            onClick={handleLinkClick("shop")}
-            className={linkClasses("shop")}
-          >
-            <motion.span
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-block"
-            >
-              Sklep
             </motion.span>
           </NavLink>
           <NavLink

@@ -1,8 +1,15 @@
 import React, { forwardRef, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import SponsorSection from "./FooterComponents/SponsorSection";
+import FootEnd from "./FooterComponents/FootEnd";
 
-const Footer = forwardRef<HTMLDivElement>((props, ref) => {
+interface FooterProps {
+  scrollToDesiredContent: (section: string) => Promise<void>;
+}
+
+const Footer = forwardRef<HTMLDivElement, FooterProps>((props, ref) => {
+  const { scrollToDesiredContent } = props;
+  
   // States for visibility
   const [isVisibleFirst, setIsVisibleFirst] = useState(false);
 
@@ -35,7 +42,7 @@ const Footer = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <>
-      <div className="relative lg:top-[3200px] top-[-150px]">
+      <div className="relative lg:top-[3200px] md:top-[2200px] top-[2200px]">
         <motion.div
           ref={refFirst}
           className="mx-[15vw]"
@@ -48,7 +55,9 @@ const Footer = forwardRef<HTMLDivElement>((props, ref) => {
         >
           <SponsorSection />
         </motion.div>
+        <FootEnd scrollToDesiredContent={scrollToDesiredContent} />
       </div>
+      
     </>
   );
 });

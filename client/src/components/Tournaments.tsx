@@ -163,11 +163,12 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                   <span className="text-gray-200">{selectedEvent.place}</span>
                 </p>
                 <motion.a
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
                   href={selectedEvent.page}
                   target="_blank"
-                  className="relative text-white font-bold top-[20px]"
+                  className="relative block text-white font-bold top-[20px] active:text-white active:no-underline focus:text-white focus:no-underline hover:text-white hover:no-underline"
                 >
                   Strona turnieju
                 </motion.a>

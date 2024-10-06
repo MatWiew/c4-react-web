@@ -4,7 +4,7 @@ import Bishop from "../assets/Bishop";
 import Leaderboard from "./ClubComponents/Leaderboard";
 
 const Club = forwardRef<HTMLDivElement>((props, ref) => {
-  const [bishopSize, setbishopSize] = useState(
+  const [bishopSize, setBishopSize] = useState(
     window.innerWidth > 1279 ? 420 : 550
   );
 
@@ -60,7 +60,7 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setbishopSize(window.innerWidth > 1279 ? 420 : 550);
+      setBishopSize(window.innerWidth > 1279 ? 420 : 550);
     };
 
     handleResize();
@@ -90,17 +90,52 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
       >
         KLUB
       </motion.span>
-      <div className="flex max-sm:flex-col justify-center xl:gap-[10vw] max-sm:gap-[300px] gap-[3vw] max-xl:min-gap align-items h-[500px] relative">
-        <div className="xl:flex max-xl:absolute max-sm:w-full max-xl:top-[-30px] xl:h-[420px] h-[600px] xl:my-auto rounded-lg 2xl:left-0 z-[-1]">
+
+      <motion.div
+        ref={refSecond}
+        className="flex max-sm:flex-col justify-center xl:gap-[10vw] max-sm:gap-[300px] gap-[3vw] max-xl:min-gap align-items h-[500px] relative"
+        initial={{ opacity: 0, scale: 0.9 }} // Start smaller and faded
+        animate={{
+          opacity: isVisibleSecond ? 1 : 0,
+          scale: isVisibleSecond ? 1 : 0.9, // Grow to normal size
+        }}
+        transition={{ duration: 0.6, ease: "easeOut" }} // Faster scaling transition
+      >
+        <motion.div
+          className="xl:flex max-xl:absolute max-sm:w-full max-xl:top-[-30px] xl:h-[420px] h-[600px] xl:my-auto rounded-lg 2xl:left-0 z-[-1]"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{
+            opacity: isVisibleSecond ? 1 : 0,
+            x: isVisibleSecond ? 0 : -50,
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" }} // Reduced duration to 0.5s
+        >
           <Bishop size={bishopSize} />
-        </div>
-        <div className="relative sm:w-[280px] max-sm:w-full">
+        </motion.div>
+
+        <motion.div
+          className="relative sm:w-[280px] max-sm:w-full"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{
+            opacity: isVisibleSecond ? 1 : 0,
+            scale: isVisibleSecond ? 1 : 0.9,
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" }} // Reduced duration to 0.5s
+        >
           <div className="relative sm:left-[-1vw] top-[15px] mx-auto max-sm:w-3/5 min-w-[280px]">
             <Leaderboard />
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-black min-w-[300px] max-sm:w-3/5 max-sm:mx-auto max-xl:bg-opacity-70 h-5/7 sm:my-auto max-sm:mt-[-250px] rounded-lg p-10 max-sm:py-5 text-3xl text-center">
+        <motion.div
+          className="bg-black min-w-[300px] max-sm:w-3/5 max-sm:mx-auto max-xl:bg-opacity-70 h-5/7 sm:my-auto max-sm:mt-[-250px] rounded-lg p-10 max-sm:py-5 text-3xl text-center"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{
+            opacity: isVisibleSecond ? 1 : 0,
+            x: isVisibleSecond ? 0 : 50,
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }} // Faster at 0.6s
+        >
           <p>Instruktorzy:</p>
           <div className="h-4/5 flex flex-col justify-between">
             <p className="text-base font-normal mt-12">1. Anna Michalak</p>
@@ -109,8 +144,8 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
             <p className="text-base font-normal mt-6">4. Wojciech Kmiecik</p>
             <p className="text-base font-normal mt-6">5. Szymon Rudowski</p>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 });

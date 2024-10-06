@@ -1,59 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import NavigationLinks from "./NavigationLinks";
 import SocialLinks from "./SocialLinks";
 import ClubLogo from "../../assets/ClubLogo";
-import { useTransform, useScroll } from "framer-motion";
+import { motion, useTransform, useScroll } from "framer-motion";
 
 interface FootEndProps {
   scrollToDesiredContent: (section: string) => Promise<void>;
-  activeSection: string | null;
 }
 
-const FootEnd: React.FC<FootEndProps> = ({
-  scrollToDesiredContent,
-  activeSection,
-}) => {
-  const [logoSize, setLogoSize] = useState(
-    window.innerWidth > 1023 ? 350 : 290
-  );
-
+const FootEnd: React.FC<FootEndProps> = ({ scrollToDesiredContent }) => {
   const { scrollYProgress } = useScroll();
-
-  const color = useTransform(
+  // Transform scroll progress to change opacity from 1 (100%) to 0.5 (50%)
+  const opacity = useTransform(
     scrollYProgress,
-    [0, 0.1], // Input range: from 0% to 5% of scroll progress
-    ["#fff", "rgba(255, 255, 255, 0.5)"]
+    [0.95, 1], // Input range from 95% to 100% of scroll progress
+    [0, 1] // Output range from 100% to 50% opacity
   );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setLogoSize(window.innerWidth > 767 ? 385 : 550);
-    };
-
-    // Call handleResize initially to set the correct size on mount
-    handleResize();
-
-    // Add event listeners
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      // Clean up event listeners on unmount
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   return (
-    <footer className="flex mt-12 flex-wrap gap-5 justify-between mx-auto w-full max-w-[1263px] max-md:max-w-full">
-      <ClubLogo size={`${logoSize}px`} color={color} />
-      <nav className="flex items-start max-md:max-w-full">
-        <NavigationLinks
-          scrollToDesiredContent={scrollToDesiredContent}
-          activeSection={activeSection}
-        />
-        <div className="flex min-h-[36px]" />
-        <SocialLinks />
-      </nav>
-    </footer>
+    <>
+      <motion.footer
+        style={{ opacity }} // Apply dynamic opacity
+        className="flex flex-wrap gap-5 justify-between mx-auto w-full lg:mt-[30vw] mt-[200px]"
+      >
+        <div className="my-auto max-md:hidden">
+          <ClubLogo size="30vw" colorN="#fff" />{" "}
+          {/* Set color to white for visibility */}
+        </div>
+        <nav className="flex items-start pr-5 max-md:w-full max-md:justify-between">
+          <NavigationLinks scrollToDesiredContent={scrollToDesiredContent} />
+          <SocialLinks />
+        </nav>
+      </motion.footer>
+      <div
+        className="flex justify-center items-center w-full text-center h-[70px]"
+        style={{ backgroundColor: "#DBFF00" }}
+      >
+        <p className="text-black md:text-[1rem] max-md:text-[2vw] font-semibold">
+          <span className="font-extrabold">©</span> 2024 Mateusz Wiewióra. All rights reserved.
+        </p>
+      </div>
+    </>
   );
 };
 

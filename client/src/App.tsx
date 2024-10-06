@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import Menu from "./components/Menu";
 import About from "./components/About";
 import Chess from "./components/Chess";
@@ -9,17 +9,17 @@ import Tournaments from "./components/Tournaments";
 import Club from "./components/Club";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import FootEnd from "./components/FooterComponents/FootEnd";
+import Admin from "./components/Admin"; // Import your Admin component
 
 const App: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   // Create refs for each section
   const aboutRef = useRef<HTMLDivElement>(null);
   const newsRef = useRef<HTMLDivElement>(null);
   const tournamentsRef = useRef<HTMLDivElement>(null);
   const clubRef = useRef<HTMLDivElement>(null);
-  const shopRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
   // Map section names to their refs
@@ -28,7 +28,6 @@ const App: React.FC = () => {
     news: newsRef,
     tournaments: tournamentsRef,
     club: clubRef,
-    shop: shopRef,
     contact: contactRef,
   };
 
@@ -43,7 +42,6 @@ const App: React.FC = () => {
         news: "/news",
         tournaments: "/tournaments",
         club: "/club",
-        shop: "/shop",
         contact: "/contact",
       };
       navigate(pathMap[activeSection]);
@@ -71,10 +69,15 @@ const App: React.FC = () => {
     });
   };
 
+  // Check if the current path is /admin
+  const isAdminPath = location.pathname === "/admin";
+
   return (
-    <div className="App lg:h-[7743px] h-[4443px] snap-y snap-mandatory">
-      <div className="min-h-full flex flex-col justify-between">
-        <main className="flex-grow">
+    <div className="App snap-y snap-mandatory overflow-x-clip">
+      {isAdminPath ? (
+        <Admin />
+      ) : (
+        <>
           <Menu
             scrollToDesiredContent={scrollToDesiredContent}
             activeSection={activeSection}
@@ -85,16 +88,10 @@ const App: React.FC = () => {
           <Tournaments ref={tournamentsRef} />
           <Club ref={clubRef} />
           <Contact ref={contactRef} />
-          <Footer />
-        </main>
-
-        <div className="relative">
-          <FootEnd
-            scrollToDesiredContent={scrollToDesiredContent}
-            activeSection={activeSection}
-          />
-        </div>
-      </div>
+          <Footer scrollToDesiredContent={scrollToDesiredContent} />
+        </>
+      )}
+      
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const navigationItems = [
-  { name: "Strona główna", section: "about" }, // Map to section names
+  { name: "Strona główna", section: "about" },
   { name: "Aktualności", section: "news" },
   { name: "Turnieje", section: "tournaments" },
   { name: "Klub", section: "club" },
@@ -11,25 +11,20 @@ const navigationItems = [
 
 interface NavigationLinksProps {
   scrollToDesiredContent: (section: string) => Promise<void>;
-  activeSection: string | null; // Add this prop
 }
 
 const NavigationLinks: React.FC<NavigationLinksProps> = ({
   scrollToDesiredContent,
-  activeSection,
 }) => {
   return (
-    <ul className="flex flex-col text-2xl text-white min-h-[285px] mr-12">
+    <ul className="flex flex-col justify-between py-2 max-md:py-7 text-2xl text-white h-[285px] max-md:ml-[15vw] mr-12 max-md:text-center">
       {navigationItems.map((item, index) => (
-        <li key={index} className={index > 0 ? "mt-7" : ""}>
+        <li key={index}>
           <motion.a
             whileHover={{ scale: 1.1, color: "#aaa" }}
             transition={{ type: "spring", stiffness: 300 }}
-            onClick={() => scrollToDesiredContent(item.section)} // Use the scroll function
-            href="#"
-            className={`block hover:no-underline hover:text-current text-white cursor-pointer ${
-              activeSection === item.section ? "text-blue-400 font-bold" : ""
-            }`} // Highlight the active link
+            onClick={() => scrollToDesiredContent(item.section)}
+            className="block hover:no-underline hover:text-current text-white cursor-pointer xl:text-[1.5rem] text-[2vw] min-w-[70px]"
           >
             {item.name}
           </motion.a>

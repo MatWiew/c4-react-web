@@ -68,11 +68,11 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
     handleResize();
 
     // Add event listeners
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       // Clean up event listeners on unmount
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -85,7 +85,7 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
           initial={{ opacity: 0, bottom: -50 }}
           animate={{
             opacity: isVisibleFirst ? 1 : 0,
-            bottom: isVisibleFirst ? 0 : -100,
+            bottom: isVisibleFirst ? 0 : -50,
           }}
           transition={{ duration: 0.5 }}
         >
@@ -95,14 +95,18 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
       <motion.div
         ref={refSecond}
         className="relative flex gap-[20vw] items-center justify-center lg:top-[1300px] md:top-[640px] top-[800px] overflow-x-clip"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0, gap: "25vw" }}
         animate={{
           opacity: isVisibleSecond ? 1 : 0,
-          gap: isVisibleSecond ? "20vw" : "100vw",
+          gap: isVisibleSecond ? "20vw" : "25vw",
         }}
         transition={{ duration: 0.5 }}
       >
-        <div ref={ref} id="news" className="flex-row max-md:absolute max-md:opacity-25">
+        <div
+          ref={ref}
+          id="news"
+          className="flex-row max-md:absolute max-md:opacity-25"
+        >
           <Queen size={queenSize} />
         </div>
         <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] rounded-lg ">

@@ -5,6 +5,7 @@ import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -23,10 +24,30 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Define Mongoose Schema and Model
+interface IAdmin extends mongoose.Document {
+  email: string;
+  password: string;
+  role: string;
+  fullName: string;
+  lastLogin: Date;
+  failedLoginAttempts: number;
+}
+
+const AdminSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ["Superadmin", "Admin"], required: true },
+  fullName: { type: String, required: true },
+  lastLogin: { type: Date },
+  failedLoginAttempts: { type: Number, default: 0 },
+});
+
+const Admin = mongoose.model<IAdmin>("Admin", AdminSchema, "AdminsData");
+
 interface IArticle extends mongoose.Document {
   title: string;
   content: string;
-  author_id: number;
+  author_id: string;
   created_at: Date;
   updated_at: Date;
   image_url: string;
@@ -35,10 +56,16 @@ interface IArticle extends mongoose.Document {
 const ArticleSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  author_id: { type: Number, required: true },
+  author_id: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   image_url: { type: String, required: true },
+});
+
+// Update the updated_at field before saving
+ArticleSchema.pre("save", function (next) {
+  this.updated_at = new Date();
+  next();
 });
 
 // Use the correct collection name
@@ -108,7 +135,79 @@ const Tournament = mongoose.model<ITournament>(
   "TournamentsData"
 );
 
-// API Routes for articles
+// Admin login route
+app.post("/admin/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find admin by email
+    const admin = await Admin.findOne({ email });
+
+    // If admin not found
+    if (!admin) {
+      return res.status(401).json({ message: "Not Good: Admin not found" });
+    }
+
+    // Compare hashed password
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    // If password does not match
+    if (!isMatch) {
+      // Optionally: Increment failed login attempts
+      admin.failedLoginAttempts += 1;
+      await admin.save();
+
+      return res.status(401).json({ message: "Not Good: Incorrect password" });
+    }
+
+    // Password matches: Update last login timestamp
+    admin.lastLogin = new Date();
+    admin.failedLoginAttempts = 0; // Reset failed login attempts
+    await admin.save();
+
+    // Login successful
+    return res.status(200).json({
+      message: "Good: Login successful",
+      fullName: admin.fullName, // Include the full name in the response
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/admin/register", async (req: Request, res: Response) => {
+  const { email, password, role, fullName } = req.body;
+
+  // Ensure role value is validated correctly
+  const validRoles = ["Superadmin", "Admin"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({
+      message: `Invalid role. Must be one of: ${validRoles.join(", ")}`,
+    });
+  }
+
+  try {
+    // Hash the password before saving it
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+    const newAdmin = new Admin({
+      email,
+      password: hashedPassword,
+      role,
+      fullName,
+    });
+
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin created successfully" });
+  } catch (err) {
+    res.status(400).json({
+      message: "Failed to create admin",
+      error: (err as Error).message,
+    });
+  }
+});
+
+// API Routes for Articles
 app.get("/api/articles", async (req: Request, res: Response) => {
   try {
     const articles = await Article.find();
@@ -121,12 +220,19 @@ app.get("/api/articles", async (req: Request, res: Response) => {
 });
 
 app.post("/api/articles", async (req: Request, res: Response) => {
-  const { title, content, author_id } = req.body;
+  const { title, content, author_id, image_url } = req.body;
 
   try {
-    const newArticle = new Article({ title, content, author_id });
+    const newArticle = new Article({
+      title,
+      content,
+      author_id,
+      created_at: new Date(),
+      updated_at: new Date(),
+      image_url,
+    });
     await newArticle.save();
-    res.json(newArticle);
+    res.status(201).json(newArticle);
   } catch (err) {
     res.status(400).json({
       message: "Failed to create article",
@@ -137,12 +243,12 @@ app.post("/api/articles", async (req: Request, res: Response) => {
 
 app.put("/api/articles/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, content, author_id } = req.body;
+  const { title, content, author_id, image_url } = req.body;
 
   try {
     const updatedArticle = await Article.findByIdAndUpdate(
       id,
-      { title, content, author_id, updated_at: new Date() },
+      { title, content, author_id, image_url },
       { new: true }
     );
     if (!updatedArticle)
