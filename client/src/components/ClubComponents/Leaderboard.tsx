@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import LeaderboardItem from './LeaderboardItem';
+import React, { useState, useEffect } from "react";
+import LeaderboardItem from "./LeaderboardItem";
 
 interface LeaderboardEntry {
   rank: number;
@@ -7,38 +7,66 @@ interface LeaderboardEntry {
   score?: number;
 }
 
-const leaderboardData: LeaderboardEntry[] = [
-  { rank: 1, name: "Yury Aksianevich", score: 1928 },
-  { rank: 2, name: "Wojciech Kmiecik", score: 1816 },
-  { rank: 3, name: "Anna Michalak", score: 1789 },
-  { rank: 4, name: "Paweł Janic", score: 1754 },
-  { rank: 5, name: "Szymon Rudowski", score: 1729 }
-];
-
 const Leaderboard: React.FC = () => {
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
+    []
+  );
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
-    // Function to check window size and update isSmallScreen
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 639); // 639px is the sm breakpoint in Tailwind
+    const fetchLeaderboardData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/topplayers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch leaderboard data");
+        }
+        const data = await response.json();
+        const formattedData = data.map(
+          (player: { fullname: string; rating: number }, index: number) => ({
+            rank: index + 1,
+            name: player.fullname,
+            score: player.rating,
+          })
+        );
+        setLeaderboardData(formattedData);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
-    // Run the function on mount and resize
+    fetchLeaderboardData();
+
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 639);
+    };
+
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   // Dynamically slice the leaderboard based on screen size
-  const displayedData = isSmallScreen ? leaderboardData.slice(0, 3) : leaderboardData;
+  const displayedData = isSmallScreen
+    ? leaderboardData.slice(0, 3)
+    : leaderboardData;
+
+  // Fill remaining spots with "-------"
+  const filledData = [...displayedData];
+  const remainingSlots = 5 - filledData.length;
+  for (let i = 0; i < remainingSlots; i++) {
+    filledData.push({
+      rank: filledData.length + 1,
+      name: "-------",
+      score: undefined,
+    });
+  }
 
   return (
     <section className="flex flex-col text-lg text-green-500 min-w-[280px] max-w-[364px]">
-      {displayedData.map((entry) => (
+      {filledData.map((entry) => (
         <LeaderboardItem
           key={entry.rank}
           rank={entry.rank}

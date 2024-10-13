@@ -13,7 +13,11 @@ interface Article {
   image_url: string;
 }
 
-const NewsSlider: React.FC = () => {
+interface NewsSliderProps {
+  onClick?: (article: Article) => void; // Accept article as argument
+}
+
+const NewsSlider: React.FC<NewsSliderProps> = ({ onClick }) => {
   const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
@@ -68,6 +72,7 @@ const NewsSlider: React.FC = () => {
         articles.map((article) => (
           <div
             key={article._id}
+            onClick={() => onClick?.(article)}
             className="relative md:h-[385px] h-[300px] rounded-lg border-[2px] border-transparent overflow-hidden"
           >
             <img

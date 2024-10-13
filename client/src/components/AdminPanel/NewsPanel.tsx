@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "../UserContext";
+import { Article } from "../../Types";
 
-const NewsPanel: React.FC = () => {
+interface NewsPanelProps {
+  selectedArticle: Article | null; // Accept selected article as prop
+}
+
+const NewsPanel: React.FC<NewsPanelProps> = ({ selectedArticle }) => {
   const { userFullName } = useUser();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -9,39 +14,69 @@ const NewsPanel: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (selectedArticle) {
+      setTitle(selectedArticle.title);
+      setContent(selectedArticle.content);
+      setImageUrl(selectedArticle.image_url);
+    } else {
+      setTitle("");
+      setContent("");
+      setImageUrl("");
+    }
+  }, [selectedArticle]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
-    // Prepare the data to be sent as JSON
+
     const articleData = {
       title,
       content,
-      author_id: userFullName, // Ensure this is the correct user identifier
+      author_id: userFullName,
       image_url: imageUrl,
     };
-  
+
     try {
-      const response = await fetch("http://localhost:5000/api/articles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Set content type to JSON
-        },
-        body: JSON.stringify(articleData), // Convert article data to JSON string
-      });
-  
+      const response = selectedArticle
+        ? await fetch(
+            `http://localhost:5000/api/articles/${selectedArticle._id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(articleData),
+            }
+          )
+        : await fetch("http://localhost:5000/api/articles", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(articleData),
+          });
+
       if (!response.ok) {
-        throw new Error("Failed to add article");
+        throw new Error("Nie udało się zapisać artykułu");
       }
 
-      // Reset form fields after successful submission
+      // Clear form fields
       setTitle("");
       setContent("");
       setImageUrl("");
-      alert("Article added successfully!");
+
+      alert(
+        selectedArticle
+          ? "Artykuł zaktualizowany pomyślnie!"
+          : "Artykuł dodany pomyślnie!"
+      );
+
+      // Reload the page to fetch updated data
+      window.location.reload();
     } catch (error) {
-      setError((error as Error).message); // Type assertion for error
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -50,7 +85,7 @@ const NewsPanel: React.FC = () => {
   return (
     <div className="admin-panel w-3/4 mx-auto bg-gray-700 p-5 rounded-lg m-12">
       <h2 className="text-2xl font-semibold text-white mb-5">
-        Dodaj artykuł do aktualności
+        {selectedArticle ? "Edytuj artykuł" : "Dodaj artykuł do aktualności"}
       </h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -97,7 +132,7 @@ const NewsPanel: React.FC = () => {
           disabled={loading}
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-200"
         >
-          {loading ? "Dodawanie..." : "Dodaj artykuł"}
+          {loading ? "Dodawanie..." : "Zapisz artykuł"}
         </button>
       </form>
     </div>

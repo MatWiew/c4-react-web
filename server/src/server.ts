@@ -81,6 +81,7 @@ interface ITournament extends mongoose.Document {
   type: "blitz" | "rapid" | "classical" | "bullet";
   round_number: number;
   place: string;
+  page: string;
 }
 
 // Define the Tournament schema
@@ -96,6 +97,31 @@ const TournamentSchema = new mongoose.Schema({
   place: { type: String, required: true },
   page: { type: String, required: true },
 });
+
+interface ITopPlayer extends mongoose.Document {
+  fullname: string;
+  rating: number; // Use Number for storing ratings
+}
+
+// Define the TopPlayers schema
+const TopPlayersSchema = new mongoose.Schema({
+  fullname: { type: String, required: true },
+  rating: { type: Number, required: true } // Use Number type for ratings
+});
+
+const TopPlayers = mongoose.model<ITopPlayer>("TopPlayers", TopPlayersSchema, "TopPlayers");
+
+interface ITrainers extends mongoose.Document {
+  fullname: string;
+}
+
+// Define the Trainers schema
+const TrainersSchema = new mongoose.Schema({
+  fullname: { type: String, required: true },
+});
+
+const Trainers = mongoose.model<ITrainers>("Trainers", TrainersSchema, "Trainers");
+
 
 // Email sending endpoint
 app.post("/api/send-email", async (req: Request, res: Response) => {
@@ -280,29 +306,68 @@ app.delete("/api/articles/:id", async (req: Request, res: Response) => {
 // API Routes for Tournaments
 app.get("/api/tournaments", async (req: Request, res: Response) => {
   try {
-    const tournaments = await Tournament.find();
+    const { date } = req.query;
+
+    // Check if date exists and is a string
+    let tournaments;
+    if (typeof date === 'string') {
+      const parsedDate = new Date(date);
+      tournaments = await Tournament.find({
+        date: {
+          $gte: parsedDate,
+          $lt: new Date(parsedDate.getTime() + 86400000), // Next day
+        },
+      });
+    } else {
+      tournaments = await Tournament.find();
+    }
+
     res.json(tournaments);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Server error", error: (err as Error).message });
+    res.status(500).json({ message: "Server error", error: (err as Error).message });
   }
 });
 
+
 app.post("/api/tournaments", async (req: Request, res: Response) => {
-  const { name, date, description, type } = req.body;
+  console.log(req.body);
+  const { name, date, type, round_number, place, page } = req.body;
 
   try {
-    const newTournament = new Tournament({ name, date, description, type });
-    await newTournament.save();
-    res.json(newTournament);
+    // Check if a tournament already exists for the specified date
+    const existingTournament = await Tournament.findOne({ date: new Date(date) });
+
+    if (existingTournament) {
+      // If tournament exists, update it
+      existingTournament.name = name;
+      existingTournament.type = type;
+      existingTournament.round_number = round_number;
+      existingTournament.place = place;
+      existingTournament.page = page;
+
+      const updatedTournament = await existingTournament.save();
+      return res.json({ message: "Tournament updated successfully", tournament: updatedTournament });
+    } else {
+      // If no tournament exists, create a new one
+      const newTournament = new Tournament({
+        name,
+        date,
+        type,
+        round_number,
+        place,
+        page,
+      });
+      await newTournament.save();
+      return res.json({ message: "Tournament created successfully", tournament: newTournament });
+    }
   } catch (err) {
     res.status(400).json({
-      message: "Failed to create tournament",
+      message: "Failed to create/update tournament",
       error: (err as Error).message,
     });
   }
 });
+
 
 app.put("/api/tournaments/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -338,6 +403,147 @@ app.delete("/api/tournaments/:id", async (req: Request, res: Response) => {
       message: "Failed to delete tournament",
       error: (err as Error).message,
     });
+  }
+});
+
+//topplayers endpoints
+app.get('/api/topplayers', async (req, res) => {
+  try {
+    const players = await TopPlayers.find().sort({ rating: -1 }); // Sort by rating in descending order
+    res.json(players);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching top players' });
+  }
+});
+
+app.post('/api/topplayers', async (req: Request, res: Response) => {
+  const { fullname, rating } = req.body;
+
+  if (!fullname || rating === undefined) {
+    return res.status(400).json({ message: "Full name and rating are required." });
+  }
+
+  try {
+    const newPlayer = new TopPlayers({ fullname, rating });
+    await newPlayer.save();
+    res.status(201).json({ message: "Top player added successfully", player: newPlayer });
+  } catch (error) {
+    console.error("Error adding top player:", error);
+    res.status(500).json({ message: 'Failed to add top player', error: (error as Error).message });
+  }
+});
+
+app.put('/api/topplayers/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { fullname, rating } = req.body;
+
+  if (!fullname || rating === undefined) {
+    return res.status(400).json({ message: "Full name and rating are required." });
+  }
+
+  try {
+    const updatedPlayer = await TopPlayers.findByIdAndUpdate(
+      id,
+      { fullname, rating },
+      { new: true }
+    );
+
+    if (!updatedPlayer) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+
+    res.json({ message: "Player updated successfully", player: updatedPlayer });
+  } catch (error) {
+    console.error("Error updating player:", error);
+    res.status(500).json({ message: 'Failed to update player', error: (error as Error).message });
+  }
+});
+
+app.delete('/api/topplayers/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log("Deleting player with ID:", id);
+  
+  try {
+    const result = await TopPlayers.findByIdAndDelete(id);
+    
+    if (!result) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+
+    res.json({ message: "Player deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting player:", error);
+    res.status(500).json({ message: 'Failed to delete player', error: (error as Error).message });
+  }
+});
+
+//trainers endpoint
+app.get('/api/trainers', async (req, res) => {
+  try {
+    const trainers = await Trainers.find();
+    res.json(trainers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching trainers' });
+  }
+});
+
+app.post('/api/trainers', async (req: Request, res: Response) => {
+  const { fullname } = req.body;
+
+  if (!fullname) {
+    return res.status(400).json({ message: "Full name is required." });
+  }
+
+  try {
+    const newTrainer = new Trainers({ fullname });
+    await newTrainer.save();
+    res.status(201).json({ message: "Trainer added successfully", trainer: newTrainer });
+  } catch (error) {
+    console.error("Error adding trainer:", error);
+    res.status(500).json({ message: 'Failed to add trainer', error: (error as Error).message });
+  }
+});
+
+app.put('/api/trainers/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { fullname } = req.body;
+
+  if (!fullname) {
+    return res.status(400).json({ message: "Full name is required." });
+  }
+
+  try {
+    const updatedTrainer = await Trainers.findByIdAndUpdate(
+      id,
+      { fullname },
+      { new: true }
+    );
+
+    if (!updatedTrainer) {
+      return res.status(404).json({ message: "Trainer not found" });
+    }
+
+    res.json({ message: "Trainer updated successfully", trainer: updatedTrainer });
+  } catch (error) {
+    console.error("Error updating trainer:", error);
+    res.status(500).json({ message: 'Failed to update trainer', error: (error as Error).message });
+  }
+});
+
+app.delete('/api/trainers/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log("Deleting trainer with ID:", id);
+  try {
+    const result = await Trainers.findByIdAndDelete(id);
+    if (!result) {
+      return res.status(404).json({ message: "Trainer not found" });
+    }
+    res.json({ message: "Trainer deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting trainer:", error);
+    res.status(500).json({ message: 'Failed to delete trainer', error: (error as Error).message });
   }
 });
 

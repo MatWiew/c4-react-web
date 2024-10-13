@@ -11,6 +11,7 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
   // States for visibility
   const [isVisibleFirst, setIsVisibleFirst] = useState(false);
   const [isVisibleSecond, setIsVisibleSecond] = useState(false);
+  const [instructors, setInstructors] = useState<string[]>([]); // State for instructors
 
   // Refs for the elements to be animated
   const refFirst = useRef(null);
@@ -64,12 +65,31 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  // Fetch instructors from the API
+  useEffect(() => {
+    const fetchInstructors = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/trainers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch instructors");
+        }
+        const data = await response.json();
+        setInstructors(
+          data.map((trainer: { fullname: string }) => trainer.fullname)
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchInstructors();
   }, []);
 
   return (
@@ -94,12 +114,12 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
       <motion.div
         ref={refSecond}
         className="flex max-sm:flex-col justify-center xl:gap-[10vw] max-sm:gap-[300px] gap-[3vw] max-xl:min-gap align-items h-[500px] relative"
-        initial={{ opacity: 0, scale: 0.9 }} // Start smaller and faded
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{
           opacity: isVisibleSecond ? 1 : 0,
-          scale: isVisibleSecond ? 1 : 0.9, // Grow to normal size
+          scale: isVisibleSecond ? 1 : 0.9,
         }}
-        transition={{ duration: 0.6, ease: "easeOut" }} // Faster scaling transition
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.div
           className="xl:flex max-xl:absolute max-sm:w-full max-xl:top-[-30px] xl:h-[420px] h-[600px] xl:my-auto rounded-lg 2xl:left-0 z-[-1]"
@@ -108,7 +128,7 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
             opacity: isVisibleSecond ? 1 : 0,
             x: isVisibleSecond ? 0 : -50,
           }}
-          transition={{ duration: 0.5, ease: "easeOut" }} // Reduced duration to 0.5s
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <Bishop size={bishopSize} />
         </motion.div>
@@ -120,7 +140,7 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
             opacity: isVisibleSecond ? 1 : 0,
             scale: isVisibleSecond ? 1 : 0.9,
           }}
-          transition={{ duration: 0.5, ease: "easeOut" }} // Reduced duration to 0.5s
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <div className="relative sm:left-[-1vw] top-[15px] mx-auto max-sm:w-3/5 min-w-[280px]">
             <Leaderboard />
@@ -134,15 +154,19 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
             opacity: isVisibleSecond ? 1 : 0,
             x: isVisibleSecond ? 0 : 50,
           }}
-          transition={{ duration: 0.6, ease: "easeOut" }} // Faster at 0.6s
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <p>Instruktorzy:</p>
           <div className="h-4/5 flex flex-col justify-between">
-            <p className="text-base font-normal mt-12">1. Anna Michalak</p>
-            <p className="text-base font-normal mt-6">2. Yury Aksianevich</p>
-            <p className="text-base font-normal mt-6">3. Paweł Janic</p>
-            <p className="text-base font-normal mt-6">4. Wojciech Kmiecik</p>
-            <p className="text-base font-normal mt-6">5. Szymon Rudowski</p>
+            {instructors.length > 0 ? (
+              instructors.map((instructor, index) => (
+                <p key={index} className="text-base font-normal mt-6">{`${
+                  index + 1
+                }. ${instructor}`}</p>
+              ))
+            ) : (
+              <p className="text-base font-normal mt-6">Brak instruktorów</p>
+            )}
           </div>
         </motion.div>
       </motion.div>

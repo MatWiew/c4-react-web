@@ -1,21 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import Calendar from 'rsuite/Calendar';
-import 'rsuite/dist/rsuite.min.css';
-import './Calendar.css';
-import Pawn from '../../assets/Pawn';
-import CustomCalendarHeader from './CustomCalendarHeader';
-import CustomMonthHeader from './CustomMonthHeader';
+import React, { useEffect, useState, useCallback } from "react";
+import Calendar from "rsuite/Calendar";
+import "rsuite/dist/rsuite.min.css";
+import "./Calendar.css";
+import Pawn from "../../assets/Pawn";
+import CustomCalendarHeader from "./CustomCalendarHeader";
+import CustomMonthHeader from "./CustomMonthHeader";
 
 interface Event {
   name: string;
   date: Date;
-  type: 'blitz' | 'rapid' | 'classical' | 'bullet';
+  type: "blitz" | "rapid" | "classical" | "bullet";
   round_number: number;
   place: string;
   page: string;
 }
 
-const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void }> = ({ onDateChange }) => {
+const CalendarC: React.FC<{
+  onDateChange?: (date: Date, events: Event[]) => void;
+}> = ({ onDateChange }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
 
@@ -25,9 +27,9 @@ const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void
         const response = await fetch("http://localhost:5000/api/tournaments");
         const data: Event[] = await response.json();
 
-        const convertedEvents = data.map(event => ({
+        const convertedEvents = data.map((event) => ({
           ...event,
-          date: new Date(event.date)
+          date: new Date(event.date),
         }));
 
         setEvents(convertedEvents);
@@ -41,13 +43,14 @@ const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void
 
   const getEventsForDay = useCallback(
     (date: Date): Event[] => {
-      const normalizeDate = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const normalizeDate = (date: Date) =>
+        new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
       const normalizedDate = normalizeDate(date);
 
-      return events.filter(event => {
+      return events.filter((event) => {
         const eventDate = normalizeDate(event.date);
-        
+
         return (
           eventDate.getDate() === normalizedDate.getDate() &&
           eventDate.getMonth() === normalizedDate.getMonth() &&
@@ -64,7 +67,10 @@ const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void
     if (list.length) {
       return (
         <div className="absolute w-12 h-5">
-          <Pawn size={18} className="absolute right-0 transform translate-x-1/2 -translate-y-1/2 z-10" />
+          <Pawn
+            size={18}
+            className="absolute right-0 transform translate-x-1/2 -translate-y-1/2 z-10"
+          />
         </div>
       );
     }
@@ -84,10 +90,10 @@ const CalendarC: React.FC<{ onDateChange?: (date: Date, events: Event[]) => void
   const year = currentDate.getFullYear();
 
   return (
-    <div className="relative max-w-[500px] w-full top-[-40px]">
+    <div className="relative max-w-[500px] w-full top-[-40px] mx-auto">
       <CustomMonthHeader month={month} year={year} />
       <CustomCalendarHeader />
-      <Calendar 
+      <Calendar
         compact
         isoWeek
         renderCell={renderCell}
