@@ -62,7 +62,10 @@ const Admin: React.FC = () => {
           <AdminLogin onLoginSuccess={handleLoginSuccess} />
         ) : (
           <>
-            <NewsPanel selectedArticle={selectedArticle} />
+            <NewsPanel
+              selectedArticle={selectedArticle}
+              onDeselectArticle={() => setSelectedArticle(null)} // Deselect article handler
+            />
             <div className="w-3/4 mx-auto">
               <NewsSlider onClick={setSelectedArticle} />
             </div>

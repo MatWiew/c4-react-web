@@ -177,7 +177,7 @@ const ClubPanel: React.FC = () => {
 
   return (
     <>
-      <div className="p-5 bg-gray-800 text-white rounded-md">
+      <div className="p-5 mt-12 bg-gray-800 text-white rounded-md w-3/4 mx-auto">
         <h2 className="text-2xl mb-4">Dodaj zawodnika</h2>
         <form onSubmit={handleSubmitPlayer} className="mb-5">
           <div className="mb-3">
@@ -205,7 +205,7 @@ const ClubPanel: React.FC = () => {
           </button>
         </form>
 
-        <h2 className="text-2xl mb-4">Dodaj lub Edytuj Instruktora</h2>
+        <h2 className="text-2xl mb-4 mt-12">Dodaj lub Edytuj Instruktora</h2>
         <form onSubmit={handleSubmitTrainer}>
           <div className="mb-3">
             <label className="block mb-1">Imię i nazwisko:</label>

@@ -28,13 +28,13 @@ const socialLinks: SocialLinkProps[] = [
   },
 ];
 
-const SocialLink: React.FC<SocialLinkProps> = ({ name, iconSrc }) => {
+const SocialLink: React.FC<SocialLinkProps> = ({ name, iconSrc, href }) => {
   return (
     <motion.a
       initial={{ scale: 1, filter: "brightness(1)"}}
       whileHover={{ scale: 1.1, filter: "brightness(0.7)"}}
       transition={{ type: "spring", stiffness: 300 }}
-      href="#"
+      href={href}
       className="flex xl:text-[1.3rem] text-[2vw] gap-2.5 items-center py-3 pr-5 pl-5 mt-5 border border-solid border-white border-opacity-30 rounded-[149px] max-md:pl-5 text-white hover:no-underline hover:text-current min-w-[120px]"
     >
       <img

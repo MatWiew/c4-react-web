@@ -87,7 +87,6 @@ const Chess = () => {
           <div className="flex flex-col lg:ml-5 w-[37%] min-w-[300px]">
             <div className="flex flex-col grow justify-center lg:pb-5 pb-3 w-full lg:text-4xl text-2xl font-medium text-white rounded-lg bg-zinc-800">
               <InteractiveChessboard />
-              <div className="self-center lg:mt-6 mt-3">Ruch białych</div>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CalendarC from "../TournamentComponents/Calendar";
 
 interface Event {
-  _id?: string; // Include _id to update existing tournaments
+  _id?: string;
   name: string;
   date: Date;
   type: "blitz" | "rapid" | "classical" | "bullet";
@@ -50,7 +50,12 @@ const TournamentsPanel: React.FC = () => {
 
     // Check for existing tournaments on the same date
     if (date) {
-      const dateString = date.toISOString().split("T")[0]; // Get YYYY-MM-DD format
+      // Convert CET date to UTC for comparison and storage
+      const utcDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      const dateString = utcDate.toISOString().split("T")[0]; // Get YYYY-MM-DD format
+
       const existingResponse = await fetch(
         `http://localhost:5000/api/tournaments?date=${dateString}`
       );
@@ -141,6 +146,45 @@ const TournamentsPanel: React.FC = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (selectedEvent?._id) {
+      const confirmDelete = window.confirm(
+        "Czy na pewno chcesz usunąć ten turniej?"
+      );
+      if (!confirmDelete) return;
+
+      try {
+        const deleteResponse = await fetch(
+          `http://localhost:5000/api/tournaments/${selectedEvent._id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!deleteResponse.ok) {
+          throw new Error("Nie udało się usunąć turnieju");
+        }
+        alert("Turniej usunięty pomyślnie!");
+        setSelectedEvent(null);
+        setName("");
+        setDate(null);
+        setType("blitz");
+        setRoundNumber(0);
+        setPlace("");
+        setPage("");
+        window.location.reload();
+      } catch (error) {
+        setError((error as Error).message);
+      }
+    }
+  };
+
+  const formatDateToLocal = (date: Date): string => {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 16);
+  };
+
   return (
     <>
       <div className="admin-panel w-3/4 mx-auto bg-gray-700 p-5 rounded-lg m-12 mt-[100px] mb-[20px]">
@@ -169,7 +213,7 @@ const TournamentsPanel: React.FC = () => {
             <input
               type="datetime-local"
               id="date"
-              value={date ? date.toISOString().slice(0, 16) : ""}
+              value={date ? formatDateToLocal(date) : ""}
               onChange={(e) => setDate(new Date(e.target.value))}
               required
               className="border rounded p-2 w-full"
@@ -240,9 +284,21 @@ const TournamentsPanel: React.FC = () => {
             disabled={loading}
             className="bg-blue-500 text-white p-2 rounded hover:bg-blue-200"
           >
-            {loading ? "Dodawanie..." : "Dodaj turniej"}
+            {loading
+              ? "Przetwarzanie..."
+              : selectedEvent
+              ? "Zaktualizuj turniej"
+              : "Dodaj turniej"}
           </button>
         </form>
+        {selectedEvent && (
+          <button
+            onClick={handleDelete}
+            className="mt-4 bg-red-500 text-white p-2 rounded hover:bg-red-700 w-full"
+          >
+            Usuń turniej
+          </button>
+        )}
       </div>
       <CalendarC onDateChange={handleDateChange} />
     </>

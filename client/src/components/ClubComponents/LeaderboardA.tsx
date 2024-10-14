@@ -70,23 +70,27 @@ const LeaderboardA: React.FC<LeaderboardProps> = ({ onPlayerSelect }) => {
   };
 
   return (
-    <section className="flex flex-col text-lg text-green-500 min-w-[280px] max-w-[364px]">
-      {leaderboardData.map((entry) => (
-        <div key={entry._id} className="flex justify-between items-center">
-          <LeaderboardItemA
-            rank={entry.rank}
-            name={entry.name}
-            score={entry.score}
-            onClick={() => onPlayerSelect(entry)}
-          />
-          <button
-            onClick={() => handleDeletePlayer(entry._id)}
-            className="text-red-500 bg-red-700 p-2 rounded-md"
-          >
-            Usuń
-          </button>
-        </div>
-      ))}
+    <section className="flex flex-col text-lg text-white min-w-[280px] max-w-[364px]">
+      {leaderboardData.length === 0 ? (
+        <p className="text-red-500">Brak zawodników</p>
+      ) : (
+        leaderboardData.map((entry) => (
+          <div key={entry._id} className="flex justify-between items-center">
+            <LeaderboardItemA
+              rank={entry.rank}
+              name={entry.name}
+              score={entry.score}
+              onClick={() => onPlayerSelect(entry)}
+            />
+            <button
+              onClick={() => handleDeletePlayer(entry._id)}
+              className="text-red-500 bg-red-700 p-2 rounded-md"
+            >
+              Usuń
+            </button>
+          </div>
+        ))
+      )}
     </section>
   );
 };
