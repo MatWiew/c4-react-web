@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import MessageComponent from "./ContactComponents/MessageComponent";
+import MessageForm from "./ContactComponents/MessageForm";
 import Rook from "../assets/Rook";
 
 const Contact = forwardRef<HTMLDivElement>((props, ref) => {
@@ -94,7 +94,7 @@ const Contact = forwardRef<HTMLDivElement>((props, ref) => {
       <div className="flex h-[520px]">
         <motion.div
           ref={refSecond}
-          className="w-2/5 max-lg:relative mx-auto lg:min-w-[570px] max-lg:w-5/6 z-10"
+          className="w-2/5 relative mx-auto lg:min-w-[570px] max-lg:w-5/6 z-10"
           initial={{ opacity: 0, x: 50 }} // Slide from the right
           animate={{
             opacity: isVisibleSecond ? 1 : 0,
@@ -102,7 +102,7 @@ const Contact = forwardRef<HTMLDivElement>((props, ref) => {
           }}
           transition={{ duration: 0.5 }}
         >
-          <MessageComponent />
+          <MessageForm />
         </motion.div>
 
         <motion.div

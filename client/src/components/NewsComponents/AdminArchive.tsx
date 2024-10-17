@@ -1,0 +1,80 @@
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+const AdminArchive: React.FC<{ onClose: (selectedArticle: any) => void }> = ({
+  onClose,
+}) => {
+  const [articles, setArticles] = useState<any[]>([]); // Use appropriate type for articles
+  const [loading, setLoading] = useState(true); // State for loading
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/articles");
+        const data = await response.json();
+        setArticles(data);
+      } catch (error) {
+        console.error("Failed to fetch articles:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  const handleArticleClick = (article: any) => {
+    onClose(article); // Pass the selected article to onClose and close the modal
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="relative bg-white rounded-lg shadow-lg p-6 w-full h-full overflow-y-auto">
+        {/* Close button */}
+        <motion.a
+          className="absolute top-4 right-4 text-white p-2 rounded-full w-10 h-10 z-10 flex items-center justify-center cursor-pointer hover:no-underline hover:text-white"
+          initial={{ backgroundColor: "#FF0000" }}
+          whileHover={{ scale: 1.2, backgroundColor: "#8B0000" }}
+          transition={{ type: "spring", stiffness: 400, damping: 50 }}
+          onClick={() => onClose(null)}
+        >
+          X
+        </motion.a>
+
+        {/* Article list */}
+        <h1 className="text-3xl font-bold mb-10 text-center">
+          Archiwum Aktualności (Admin)
+        </h1>
+        {loading ? (
+          <p>Ładowanie artykułów...</p> // Loading state
+        ) : (
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {articles.map((article: { title: string; image_url: string }) => (
+              <motion.li
+                key={article.title}
+                className="flex items-center cursor-pointer rounded-lg border-2 border-black border-solid hover:border-dashed p-4"
+                onClick={() => handleArticleClick(article)}
+                whileHover={{ scale: 1.03 }} // Slight scale on hover
+                transition={{ type: "spring", stiffness: 400, damping: 30 }} // Smooth scaling transition
+              >
+                <img
+                  src={article.image_url}
+                  alt={article.title}
+                  className="w-16 h-16 object-cover rounded mr-4"
+                />
+                <span className="text-xl">{article.title}</span>
+              </motion.li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+export default AdminArchive;

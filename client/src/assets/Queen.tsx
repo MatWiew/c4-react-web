@@ -1,10 +1,14 @@
 import React from "react";
 
+interface QueenProps {
+  size?: number;
+  className?: string;
+}
 
-function Queen({ size }) {
+const Queen: React.FC<QueenProps> = ({ size = 24, className }) => {
   // Calculate width based on the aspect ratio (width:height = 170:402)
   const width = (size / 402) * 170;
-  const widthPx = `${parseInt(width)}px`;
+  const widthPx = `${width}px`;
 
   return (
     <div style={{ width: widthPx }}>
@@ -14,7 +18,10 @@ function Queen({ size }) {
         height={size}
         fill="none"
         viewBox="0 0 170 402"
-        className="drop-shadow-[0_0_5px_rgba(0,102,255,0.75)] drop-shadow-[0_0_10px_rgba(0,102,255,0.75)]"
+        className={
+          className ||
+          "drop-shadow-[0_0_5px_rgba(0,102,255,0.75)] drop-shadow-[0_0_10px_rgba(0,102,255,0.75)]"
+        }
       >
         <g clipPath="url(#clip0_32_101)" filter="url(#filter0_i_32_101)">
           <path
@@ -25,6 +32,6 @@ function Queen({ size }) {
       </svg>
     </div>
   );
-}
+};
 
 export default Queen;

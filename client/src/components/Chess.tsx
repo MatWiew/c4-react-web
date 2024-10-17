@@ -74,18 +74,23 @@ const Chess = () => {
           <div className="lg:flex hidden flex-col w-5/12 max-md:w-full">
             <div className="flex flex-col grow justify-center px-5 pt-16 pb-20 text-center max-md:mt-9 max-md:max-w-full">
               <div className="mt-15 lg:text-5xl text-4xl italic font-black text-white max-md:mt-10 max-md:max-w-full max-md:text-4xl">
-                Rozwiązuj codziennie nasze zadania
+                <p className="leading-tight">
+                  <span className="bg-white rounded-lg px-2 text-black">
+                    Kliknij
+                  </span>{" "}
+                  na zadanie aby je rozwiązać
+                </p>
               </div>
               <div className="lg:mt-12 mt-7 lg:text-lg text-base leading-7 text-zinc-400 max-md:mt-10 max-md:max-w-full">
-                To doskonały sposób na poprawę swoich umiejętności w grze.
-                Regularne ćwiczenie pozwala na rozwijanie analitycznego
-                myślenia, zdolności do przewidywania ruchów przeciwnika oraz
-                lepszego rozumienia strategii szachowych.
+                Codzienne rozwiązywanie zadań szachowych to doskonały sposób na
+                poprawę swoich umiejętności w grze. Regularne ćwiczenie pozwala
+                na rozwijanie analitycznego myślenia oraz zdolności do
+                przewidywania ruchów przeciwnika.
               </div>
             </div>
           </div>
           <div className="flex flex-col lg:ml-5 w-[37%] min-w-[300px]">
-            <div className="flex flex-col grow justify-center lg:pb-5 pb-3 w-full lg:text-4xl text-2xl font-medium text-white rounded-lg bg-zinc-800">
+            <div className="flex flex-col justify-center lg:pb-5 pb-3 w-full lg:text-4xl text-2xl font-medium text-white rounded-lg bg-zinc-800">
               <InteractiveChessboard />
             </div>
           </div>

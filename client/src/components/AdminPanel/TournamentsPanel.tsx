@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import CalendarC from "../TournamentComponents/Calendar";
+import Pawn from "../../assets/Pawn";
+import Bishop from "../../assets/Bishop";
+import Knight from "../../assets/Knight";
+import Queen from "../../assets/Queen";
+import King from "../../assets/King";
+import Rook from "../../assets/Rook";
 
 interface Event {
   _id?: string;
@@ -9,7 +15,17 @@ interface Event {
   round_number: number;
   place: string;
   page: string;
+  icon: "pawn" | "bishop" | "knight" | "queen" | "king" | "rook";
 }
+
+const iconComponents = {
+  pawn: Pawn,
+  bishop: Bishop,
+  knight: Knight,
+  queen: Queen,
+  king: King,
+  rook: Rook,
+};
 
 const TournamentsPanel: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -21,6 +37,9 @@ const TournamentsPanel: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [icon, setIcon] = useState<
+    "pawn" | "bishop" | "knight" | "queen" | "king" | "rook"
+  >("pawn");
 
   const handleDateChange = (date: Date, events: Event[]) => {
     if (events.length > 0) {
@@ -32,6 +51,7 @@ const TournamentsPanel: React.FC = () => {
       setRoundNumber(event.round_number);
       setPlace(event.place);
       setPage(event.page);
+      setIcon(event.icon); // Set the icon when editing
     } else {
       setSelectedEvent(null);
       setName("");
@@ -40,6 +60,7 @@ const TournamentsPanel: React.FC = () => {
       setRoundNumber(0);
       setPlace("");
       setPage("");
+      setIcon("pawn"); // Reset icon
     }
   };
 
@@ -50,11 +71,10 @@ const TournamentsPanel: React.FC = () => {
 
     // Check for existing tournaments on the same date
     if (date) {
-      // Convert CET date to UTC for comparison and storage
       const utcDate = new Date(
         date.getTime() - date.getTimezoneOffset() * 60000
       );
-      const dateString = utcDate.toISOString().split("T")[0]; // Get YYYY-MM-DD format
+      const dateString = utcDate.toISOString().split("T")[0];
 
       const existingResponse = await fetch(
         `http://localhost:5000/api/tournaments?date=${dateString}`
@@ -66,9 +86,14 @@ const TournamentsPanel: React.FC = () => {
         return;
       }
 
-      const existingTournaments = await existingResponse.json();
+      const existingTournaments: Event[] = await existingResponse.json();
 
-      if (existingTournaments.length > 0) {
+      // If updating an existing tournament, exclude it from the existing check
+      if (
+        existingTournaments.length > 0 &&
+        selectedEvent &&
+        existingTournaments.some((event) => event._id !== selectedEvent._id)
+      ) {
         alert("Turniej już istnieje w tym dniu. Proszę wybrać inny termin.");
         setLoading(false);
         return;
@@ -76,13 +101,14 @@ const TournamentsPanel: React.FC = () => {
     }
 
     const tournamentData: Event = {
-      _id: selectedEvent?._id, // Include _id for updates
+      _id: selectedEvent?._id,
       name,
       date: date ? new Date(date) : new Date(),
       type: type as "blitz" | "rapid" | "classical" | "bullet",
       round_number: roundNumber,
       place,
       page,
+      icon,
     };
 
     if (isNaN(tournamentData.date.getTime())) {
@@ -93,7 +119,6 @@ const TournamentsPanel: React.FC = () => {
 
     try {
       if (tournamentData._id) {
-        // Update existing tournament
         const updateResponse = await fetch(
           `http://localhost:5000/api/tournaments/${tournamentData._id}`,
           {
@@ -110,7 +135,6 @@ const TournamentsPanel: React.FC = () => {
         }
         alert("Turniej zaktualizowany pomyślnie!");
       } else {
-        // Create new tournament
         const postResponse = await fetch(
           "http://localhost:5000/api/tournaments",
           {
@@ -128,16 +152,15 @@ const TournamentsPanel: React.FC = () => {
         alert("Turniej dodany pomyślnie!");
       }
 
-      // Clear form
+      // Reset form fields after submission
       setName("");
       setDate(null);
       setType("blitz");
       setRoundNumber(0);
       setPlace("");
       setPage("");
-      setSelectedEvent(null); // Reset selected event after submit
-
-      // Reload the page to fetch updated data
+      setSelectedEvent(null);
+      setIcon("pawn"); // Reset icon after submit
       window.location.reload();
     } catch (error) {
       setError((error as Error).message);
@@ -268,7 +291,7 @@ const TournamentsPanel: React.FC = () => {
           </div>
           <div>
             <label htmlFor="page" className="block mb-1 text-white">
-              Strona turnieju:
+              Strona:
             </label>
             <input
               type="text"
@@ -279,16 +302,49 @@ const TournamentsPanel: React.FC = () => {
               className="border rounded p-2 w-full"
             />
           </div>
+          <div>
+            <label className="block mb-1 text-white">Ikona turnieju:</label>
+            <div className="flex space-x-4">
+              {Object.entries(iconComponents).map(([key, IconComponent]) => (
+                <div
+                  key={key}
+                  className={`icon-button ${icon === key ? "selected" : ""}`}
+                  onClick={() =>
+                    setIcon(
+                      key as
+                        | "pawn"
+                        | "bishop"
+                        | "knight"
+                        | "queen"
+                        | "king"
+                        | "rook"
+                    )
+                  }
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    borderRadius: "50%",
+                    border:
+                      icon === key ? "2px solid blue" : "2px solid transparent",
+                    backgroundColor:
+                      icon === key ? "rgba(0, 255, 44, 0.1)" : "transparent",
+                    transition: "background-color 0.2s",
+                  }}
+                >
+                  <IconComponent size={30} className="w-full h-[30px]" />
+                </div>
+              ))}
+            </div>
+          </div>
           <button
             type="submit"
-            disabled={loading}
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-200"
+            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 w-full"
           >
-            {loading
-              ? "Przetwarzanie..."
-              : selectedEvent
-              ? "Zaktualizuj turniej"
-              : "Dodaj turniej"}
+            {selectedEvent ? "Zaktualizuj turniej" : "Dodaj turniej"}
           </button>
         </form>
         {selectedEvent && (

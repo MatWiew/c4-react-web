@@ -1,8 +1,13 @@
 import React from "react";
 
-function Rook({ size }) {
+interface RookProps {
+  size?: number;
+  className?: string;
+}
+
+const Rook: React.FC<RookProps> = ({ size = 24, className }) => {
   const width = (size / 263) * 167;
-  const widthPx = `${parseInt(width)}px`;
+  const widthPx = `${width}px`;
   return (
     <div className="mx-auto w-full" style={{ width: widthPx }}>
       <svg
@@ -11,7 +16,10 @@ function Rook({ size }) {
         height={size}
         fill="none"
         viewBox="0 0 165 253"
-        className="drop-shadow-[0_0_5px_rgba(219,255,0,0.75)] drop-shadow-[0_0_10px_rgba(219,255,0,0.75)]"
+        className={
+          className ||
+          "drop-shadow-[0_0_5px_rgba(219,255,0,0.75)] drop-shadow-[0_0_10px_rgba(219,255,0,0.75)]"
+        }
       >
         <g clipPath="url(#clip0_32_129)" filter="url(#filter0_i_32_129)">
           <path
@@ -22,6 +30,6 @@ function Rook({ size }) {
       </svg>
     </div>
   );
-}
+};
 
 export default Rook;

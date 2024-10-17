@@ -2,60 +2,61 @@ import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Queen from "../assets/Queen";
 import NewsSlider from "./NewsComponents/NewsSlider";
+import FullscreenArticleModal from "./NewsComponents/FullscreenArticleModal"; // Import the fullscreen modal
+
+// Define the Article interface here if it's not globally available
+interface Article {
+  _id: string;
+  title: string;
+  content: string;
+  image_url: string;
+}
 
 const News = forwardRef<HTMLDivElement>((props, ref) => {
   const [queenSize, setQueenSize] = useState(
     window.innerWidth > 1023 ? 385 : 335
   );
-  // States for visibility
+
   const [isVisibleFirst, setIsVisibleFirst] = useState(false);
   const [isVisibleSecond, setIsVisibleSecond] = useState(false);
+
+  // State to manage fullscreen mode for the article
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null); // Updated type
 
   // Refs for the elements to be animated
   const refFirst = useRef(null);
   const refSecond = useRef(null);
 
   useEffect(() => {
-    const currentRefFirst = refFirst.current;
-    const currentRefSecond = refSecond.current;
-
-    // Intersection observer for the first element
     const observerFirst = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisibleFirst(true);
-          observerFirst.unobserve(entry.target); // Stop observing after visibility
+          observerFirst.unobserve(entry.target);
         }
       },
-      { threshold: 0.1 } // Adjust threshold as needed
+      { threshold: 0.1 }
     );
 
-    // Intersection observer for the second element
     const observerSecond = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisibleSecond(true);
-          observerSecond.unobserve(entry.target); // Stop observing after visibility
+          observerSecond.unobserve(entry.target);
         }
       },
-      { threshold: 0.1 } // Adjust threshold as needed
+      { threshold: 0.1 }
     );
 
-    if (currentRefFirst) {
-      observerFirst.observe(currentRefFirst);
-    }
+    const currentFirst = refFirst.current; // Store the current value
+    const currentSecond = refSecond.current; // Store the current value
 
-    if (currentRefSecond) {
-      observerSecond.observe(currentRefSecond);
-    }
+    if (currentFirst) observerFirst.observe(currentFirst);
+    if (currentSecond) observerSecond.observe(currentSecond);
 
     return () => {
-      if (currentRefFirst) {
-        observerFirst.unobserve(currentRefFirst);
-      }
-      if (currentRefSecond) {
-        observerSecond.unobserve(currentRefSecond);
-      }
+      if (currentFirst) observerFirst.unobserve(currentFirst); // Use the stored value
+      if (currentSecond) observerSecond.unobserve(currentSecond); // Use the stored value
     };
   }, []);
 
@@ -64,14 +65,10 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
       setQueenSize(window.innerWidth > 767 ? 385 : 550);
     };
 
-    // Call handleResize initially to set the correct size on mount
     handleResize();
-
-    // Add event listeners
     window.addEventListener("resize", handleResize);
 
     return () => {
-      // Clean up event listeners on unmount
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -110,9 +107,20 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
           <Queen size={queenSize} />
         </div>
         <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] rounded-lg ">
-          <NewsSlider />
+          {/* Pass the handler to show fullscreen */}
+          <NewsSlider
+            onClick={(article: Article) => setSelectedArticle(article)}
+          />
         </div>
       </motion.div>
+
+      {/* Render FullscreenArticleModal when an article is selected */}
+      {selectedArticle && (
+        <FullscreenArticleModal
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)} // Close fullscreen
+        />
+      )}
     </>
   );
 });

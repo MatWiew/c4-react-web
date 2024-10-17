@@ -44,8 +44,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
 
   return (
     <div className="absolute flex mx-auto h-[300px] bg-gray-700 rounded-lg p-5 w-[40vw] ml-[30vw] max-lg:w-[40vw] max-lg:ml-[30vw] max-md:w-[60vw] max-md:ml-[20vw] max-sm:w-[80vw] max-sm:ml-[10vw] mt-[100px]">
-      <form onSubmit={handleLogin} className="flex flex-col justify-between mx-auto w-2/3 h-full">
-        <h2 className="mb-5 text-white text-xl text-center">Logowanie do panelu admina</h2>
+      <form
+        onSubmit={handleLogin}
+        className="flex flex-col justify-between mx-auto w-2/3 h-full"
+      >
+        <h2 className="mb-5 text-white text-xl text-center">
+          Logowanie do panelu admina
+        </h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div className="flex flex-col gap-[20px]">
           <div>

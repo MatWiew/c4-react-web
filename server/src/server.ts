@@ -47,19 +47,19 @@ const Admin = mongoose.model<IAdmin>("Admin", AdminSchema, "AdminsData");
 interface IArticle extends mongoose.Document {
   title: string;
   content: string;
-  author_id: string;
   created_at: Date;
   updated_at: Date;
   image_url: string;
+  isSecond?: boolean;
 }
 
 const ArticleSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  author_id: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   image_url: { type: String, required: true },
+  isSecond: { type: Boolean, default: false },
 });
 
 // Update the updated_at field before saving
@@ -82,6 +82,7 @@ interface ITournament extends mongoose.Document {
   round_number: number;
   place: string;
   page: string;
+  icon: "pawn" | "bishop" | "knight" | "queen" | "king" | "rook";
 }
 
 // Define the Tournament schema
@@ -96,6 +97,11 @@ const TournamentSchema = new mongoose.Schema({
   round_number: { type: Number, required: true },
   place: { type: String, required: true },
   page: { type: String, required: true },
+  icon: {
+    type: String,
+    enum: ["pawn", "bishop", "knight", "queen", "king", "rook"],
+    required: true,
+  },
 });
 
 interface ITopPlayer extends mongoose.Document {
@@ -139,7 +145,7 @@ app.post("/api/send-email", async (req: Request, res: Response) => {
   // Email options
   const mailOptions = {
     from: email,
-    to: "mateowiew@gmail.com",
+    to: "Paweljakubvalmet@gmail.com",
     subject: `Wiadomość od ${name}`,
     text: `Imię: ${name},\nAdres mailowy: ${email},\n\nWiadomość: ${message}`,
   };
@@ -160,6 +166,21 @@ const Tournament = mongoose.model<ITournament>(
   TournamentSchema,
   "TournamentsData"
 );
+
+// Define the Sponsors schema
+interface ISponsor extends mongoose.Document {
+  name: string;
+  image_url: string;
+}
+
+// Create the Sponsor schema
+const SponsorSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  image_url: { type: String, required: true },
+});
+
+// Create the Sponsor model with the correct collection name
+const Sponsor = mongoose.model<ISponsor>("Sponsors", SponsorSchema, "Sponsors");
 
 // Admin login route
 app.post("/admin/login", async (req: Request, res: Response) => {
@@ -233,6 +254,54 @@ app.post("/admin/register", async (req: Request, res: Response) => {
   }
 });
 
+// Get all sponsors
+app.get('/api/sponsors', async (req: Request, res: Response) => {
+  try {
+    const sponsors = await Sponsor.find(); // Fetch all sponsors from the database
+    res.json(sponsors); // Send sponsors as JSON response
+  } catch (error) {
+    console.error("Error fetching sponsors:", error);
+    res.status(500).json({ message: 'Failed to fetch sponsors', error: (error as Error).message });
+  }
+});
+
+// Add a sponsor
+app.post('/api/sponsors', async (req: Request, res: Response) => {
+  const { name, image_url } = req.body;
+
+  if (!name || !image_url) {
+    return res.status(400).json({ message: "Name and image URL are required." });
+  }
+
+  try {
+    const newSponsor = new Sponsor({ name, image_url });
+    await newSponsor.save();
+    res.status(201).json({ message: "Sponsor added successfully", sponsor: newSponsor });
+  } catch (error) {
+    console.error("Error adding sponsor:", error);
+    res.status(500).json({ message: 'Failed to add sponsor', error: (error as Error).message });
+  }
+});
+
+// Delete a sponsor
+app.delete('/api/sponsors/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await Sponsor.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Sponsor not found" });
+    }
+
+    res.json({ message: "Sponsor deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting sponsor:", error);
+    res.status(500).json({ message: 'Failed to delete sponsor', error: (error as Error).message });
+  }
+});
+
+
 // API Routes for Articles
 app.get("/api/articles", async (req: Request, res: Response) => {
   try {
@@ -246,16 +315,16 @@ app.get("/api/articles", async (req: Request, res: Response) => {
 });
 
 app.post("/api/articles", async (req: Request, res: Response) => {
-  const { title, content, author_id, image_url } = req.body;
+  const { title, content, image_url, isSecond } = req.body;
 
   try {
     const newArticle = new Article({
       title,
       content,
-      author_id,
       created_at: new Date(),
       updated_at: new Date(),
       image_url,
+      isSecond: isSecond || false,
     });
     await newArticle.save();
     res.status(201).json(newArticle);
@@ -269,12 +338,12 @@ app.post("/api/articles", async (req: Request, res: Response) => {
 
 app.put("/api/articles/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, content, author_id, image_url } = req.body;
+  const { title, content, author_id, image_url, isSecond } = req.body;
 
   try {
     const updatedArticle = await Article.findByIdAndUpdate(
       id,
-      { title, content, author_id, image_url },
+      { title, content, author_id, image_url, isSecond },
       { new: true }
     );
     if (!updatedArticle)
@@ -331,7 +400,7 @@ app.get("/api/tournaments", async (req: Request, res: Response) => {
 
 app.post("/api/tournaments", async (req: Request, res: Response) => {
   console.log(req.body);
-  const { name, date, type, round_number, place, page } = req.body;
+  const { name, date, type, round_number, place, page, icon } = req.body;
 
   try {
     // Check if a tournament already exists for the specified date
@@ -344,6 +413,7 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
       existingTournament.round_number = round_number;
       existingTournament.place = place;
       existingTournament.page = page;
+      existingTournament.icon = icon;
 
       const updatedTournament = await existingTournament.save();
       return res.json({ message: "Tournament updated successfully", tournament: updatedTournament });
@@ -356,6 +426,7 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
         round_number,
         place,
         page,
+        icon,
       });
       await newTournament.save();
       return res.json({ message: "Tournament created successfully", tournament: newTournament });
@@ -371,12 +442,12 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
 
 app.put("/api/tournaments/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, date, description, type } = req.body;
+  const { name, date, description, type, icon } = req.body;
 
   try {
     const updatedTournament = await Tournament.findByIdAndUpdate(
       id,
-      { name, date, description, type },
+      { name, date, description, type, icon },
       { new: true }
     );
     if (!updatedTournament)

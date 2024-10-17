@@ -1,6 +1,11 @@
 import React from "react";
 
-const Pawn = ({ size, className }) => {
+interface PawnProps {
+  size?: number;
+  className?: string;
+}
+
+const Pawn: React.FC<PawnProps> = ({ size = 24, className }) => {
     const aspectRatio = 9 / 14;
     const width = size * aspectRatio;
   

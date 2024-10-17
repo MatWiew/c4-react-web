@@ -1,9 +1,13 @@
 import React from "react";
 
-function Knight({ size }) {
-  // Calculate width based on the aspect ratio (width:height = 167:263)
+interface KnightProps {
+  size?: number;
+  className?: string;
+}
+
+const Knight: React.FC<KnightProps> = ({ size = 24, className }) => {
   const width = (size / 263) * 167;
-  const widthPx = `${parseInt(width)}px`;
+  const widthPx = `${width}px`;
 
   return (
     <div className="mx-auto w-full" style={{ width: widthPx }}>
@@ -12,7 +16,10 @@ function Knight({ size }) {
         width={width}
         height={size}
         viewBox="0 0 168 263"
-        className="absolute drop-shadow-[0_0_5px_rgba(0,255,209,0.75)] drop-shadow-[0_0_10px_rgba(0,255,209,0.75)] 2xl:right-0"
+        className={
+          className ||
+          "absolute drop-shadow-[0_0_5px_rgba(0,255,209,0.75)] drop-shadow-[0_0_10px_rgba(0,255,209,0.75)] 2xl:right-0"
+        }
       >
         <g clipPath="url(#clip0_32_110)" filter="url(#filter0_i_32_110)">
           <path
@@ -23,6 +30,6 @@ function Knight({ size }) {
       </svg>
     </div>
   );
-}
+};
 
 export default Knight;

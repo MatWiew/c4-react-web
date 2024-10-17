@@ -1,9 +1,14 @@
 import React from "react";
 
-function King({ size }) {
+interface KingProps {
+  size?: number;
+  className?: string;
+}
+
+const King: React.FC<KingProps> = ({ size = 24, className }) => {
   // Calculate width based on the aspect ratio (width:height = 80:172)
   const width = (size / 172) * 80;
-  const widthPx = `${parseInt(width)}px`;
+  const widthPx = `${width}px`;
 
   return (
     <div style={{ width: widthPx }}>
@@ -13,7 +18,10 @@ function King({ size }) {
         height={size}
         fill="none"
         viewBox="0 0 80 172"
-        className="drop-shadow-[0_0_5px_rgba(112,0,255,0.75)] drop-shadow-[0_0_10px_rgba(112,0,255,0.75)]"
+        className={
+          className ||
+          "drop-shadow-[0_0_5px_rgba(112,0,255,0.75)] drop-shadow-[0_0_10px_rgba(112,0,255,0.75)]"
+        }
       >
         <g clipPath="url(#clip0_32_365)" filter="url(#filter0_i_32_365)">
           <path
@@ -29,6 +37,6 @@ function King({ size }) {
       </svg>
     </div>
   );
-}
+};
 
 export default King;

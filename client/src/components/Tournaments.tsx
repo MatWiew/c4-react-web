@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import CalendarC from "./TournamentComponents/Calendar";
 import Knight from "../assets/Knight";
 import Pawn from "../assets/Pawn";
+import Bishop from "../assets/Bishop";
+import Queen from "../assets/Queen";
+import King from "../assets/King";
+import Rook from "../assets/Rook";
 
 interface Event {
   name: string;
@@ -163,20 +167,40 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                   <span className="text-gray-200">{selectedEvent.place}</span>
                 </p>
                 <motion.a
-                  whileHover={{ scale: 1.08 }}
+                  style={{ backgroundColor: "rgba(0,255,209,0.3)" }}
+                  whileHover={{
+                    scale: 1.08,
+                    backgroundColor: "rgba(0,255,209,0.7)",
+                  }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                   href={selectedEvent.page}
                   target="_blank"
-                  className="relative block text-white font-bold top-[20px] active:text-white active:no-underline focus:text-white focus:no-underline hover:text-white hover:no-underline"
+                  className="relative block text-white font-bold top-[20px] p-1 rounded-lg active:text-white active:no-underline focus:text-white focus:no-underline hover:text-white hover:no-underline"
                 >
                   Strona turnieju
                 </motion.a>
               </div>
             ) : (
-              <p className="flex-grow w-full text-center my-auto text-lg">
-                Kliknij na dzień, obok którego znajduje się
-                <Pawn size={30} className="w-full mt-2" />
+              <p className="flex-grow w-full my-auto text-lg">
+                <h1 className="relative text-xl top-[-40px]">
+                  Przeglądaj kalendarz w poszukiwaniu turniejów.
+                </h1>
+                <div className="">
+                  <p className="relative">Szukaj naszych figur szachowych:</p>
+                  <div className="flex justify-center mt-2 w-[208px] mx-auto">
+                    <Pawn size={30} className="absolute left-[200px]" />
+                    <Bishop size={30} className="absolute left-[170px]" />
+                    <Knight size={30} className="absolute left-[140px]" />
+                    <Queen size={30} className="absolute left-[235px]" />
+                    <King size={30} className="absolute left-[260px]" />
+                    <Rook size={30} className="absolute left-[290px]" />
+                  </div>
+                  <p className="mt-9">
+                    A następnie kliknij na dzień oznaczony figurą aby dowiedzieć
+                    się więcej o turnieju
+                  </p>
+                </div>
               </p>
             )}
           </div>

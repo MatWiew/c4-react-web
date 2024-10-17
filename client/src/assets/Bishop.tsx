@@ -1,9 +1,13 @@
 import React from "react";
 
-function Bishop({ size }) {
-  // Calculate width based on the aspect ratio (width:height = 167:263)
+interface BishopProps {
+  size?: number;
+  className?: string;
+}
+
+const Bishop: React.FC<BishopProps> = ({ size = 24, className }) => {
   const width = (size / 263) * 167;
-  const widthPx = `${parseInt(width)}px`;
+  const widthPx = `${width}px`;
 
   return (
     <div className="mx-auto w-full" style={{ width: widthPx }}>
@@ -12,7 +16,10 @@ function Bishop({ size }) {
         width={width}
         height={size}
         viewBox="0 0 168 371"
-        className="drop-shadow-[0_0_5px_rgba(0,255,44,0.75)] drop-shadow-[0_0_10px_rgba(0,255,44,0.75)] 2xl:right-0"
+        className={
+          className ||
+          "drop-shadow-[0_0_5px_rgba(0,255,44,0.75)] drop-shadow-[0_0_10px_rgba(0,255,44,0.75)]"
+        }
       >
         <g clipPath="url(#clip0_32_119)" filter="url(#filter0_i_32_119)">
           <path
@@ -23,6 +30,6 @@ function Bishop({ size }) {
       </svg>
     </div>
   );
-}
+};
 
 export default Bishop;

@@ -16,9 +16,8 @@ const InteractiveChessboard: React.FC = () => {
   const [game, setGame] = useState(new Chess());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expectedMoves, setExpectedMoves] = useState<string[]>([]); // State to hold expected moves
+  const [puzzleUrl, setPuzzleUrl] = useState<string | null>(null); // Store the fetched puzzle URL
 
-  // Fetch a random daily puzzle from Chess.com
   useEffect(() => {
     const fetchPuzzle = async () => {
       try {
@@ -28,39 +27,15 @@ const InteractiveChessboard: React.FC = () => {
         }
         const puzzleData: Puzzle = await response.json();
 
-        // Check if the fetched puzzle is valid
         if (!puzzleData.fen || !puzzleData.pgn) {
           throw new Error("Puzzle data is invalid");
         }
 
-        // Extracting moves from PGN
-        if (puzzleData.pgn) {
-          // Check if pgn is not null
-          const lines = puzzleData.pgn.split("\n");
-
-          const moveLines = lines
-            .filter((line) => !line.startsWith("[")) // Keep only lines that do not start with '['
-            .join(" "); // Join the lines into one large string, separated by spaces
-
-          // Check if matches are found and process them
-          const cleanedMoves = moveLines ? moveLines.split(" ") : []; // Fallback to empty array if no matches
-          const filteredMoves = cleanedMoves
-            .map((move) => move.replace(/\r/g, "")) // Remove '\r' from each move
-            .filter((move) => move.length > 1 && !/[/.\\*]/.test(move)); // Filter based on length and unwanted characters
-
-          console.log(puzzleData.pgn);
-          console.log(filteredMoves);
-          // Set the expected moves using nullish coalescing
-          setExpectedMoves(cleanedMoves ?? []); // Using nullish coalescing to ensure it's never null
-        }
-
-        // Set the game state with the fetched puzzle data
         setGame(new Chess(puzzleData.fen));
+        setPuzzleUrl(puzzleData.url); // Store the puzzle URL
       } catch (error) {
         setError((error as Error).message);
-        // Fallback to an empty state if error occurs
         setGame(new Chess());
-        setExpectedMoves([]); // Clear expected moves
       } finally {
         setLoading(false);
       }
@@ -68,85 +43,6 @@ const InteractiveChessboard: React.FC = () => {
 
     fetchPuzzle();
   }, []);
-
-  const onPieceDrop = (
-    sourceSquare: string,
-    targetSquare: string,
-    piece: string
-  ): boolean => {
-    if (sourceSquare) {
-      // Create the base move notation for expectedMoves check
-      let moveNotation =
-        piece.slice(1).toLowerCase() === "p"
-          ? targetSquare // Format for pawn move like "b5"
-          : `${piece.slice(1).toUpperCase()}${targetSquare}`; // Format for other pieces
-
-      // Make the move
-      const move = game.move({ from: sourceSquare, to: targetSquare });
-
-      // Check if the move resulted in a capture
-      const isCapture = move?.captured !== undefined; // Check if the captured property is defined
-
-      // Check for promotion
-      const isPromotion =
-        piece.toLowerCase() === "p" &&
-        (targetSquare[1] === "8" || targetSquare[1] === "1");
-
-      // If the move is a capture, add 'x'
-      if (isCapture) {
-        moveNotation += "x";
-      }
-
-      // Check if the game is in check after the move
-      if (game.inCheck()) {
-        moveNotation += "+";
-      }
-
-      // Check if the game is in checkmate after the move
-      if (game.isCheckmate()) {
-        moveNotation += "#";
-      }
-
-      // Handle promotion notation
-      if (isPromotion) {
-        // Assuming we promote to a queen (you can modify this based on user choice)
-        moveNotation += "=Q"; // Change to "=N" for knight promotion
-      }
-
-      // Clean up moveNotation
-
-      // Get the list of possible legal moves
-      const legalMoves = game.moves();
-
-      const filteredLegalMoves = legalMoves.map(
-        (move) => move.replace(/[x+]/g, "") // Clean up legal moves as well
-      );
-
-      // Check if the attempted move is valid
-      const isLegalMove = filteredLegalMoves.some(
-        (move) => move === moveNotation // Check against cleaned notation
-      );
-
-      if (isLegalMove) {
-        // Check if the move is correct according to the expectedMoves
-        if (expectedMoves.length > 0 && expectedMoves[0] === moveNotation) {
-          console.log("ok"); // Log "ok" for the correct move
-          setExpectedMoves((prev) => prev.slice(1)); // Remove the first expected move
-        } else {
-          console.log("nie ok", expectedMoves[0], moveNotation); // Log "nie ok" for an illegal but correct move
-          return false; // Don't apply the move if it's not the expected one
-        }
-
-        setGame(new Chess(game.fen())); // Update the game state with the new position
-        return true;
-      } else {
-        console.log("nielegalny", moveNotation, legalMoves); // Log "nielegalny" for invalid moves
-        return false; // Return false for invalid moves
-      }
-    }
-
-    return false; // Return false if no sourceSquare is set
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -156,27 +52,45 @@ const InteractiveChessboard: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
+  // Redirect to the fetched puzzle URL on board click
+  const handleBoardClick = () => {
+    if (puzzleUrl) {
+      window.open(puzzleUrl, "_blank"); // Open the fetched puzzle URL in a new tab
+    }
+  };
+
   return (
-    <div>
-      <Chessboard
-        id="StyledBoard"
-        position={game.fen()}
-        onPieceDrop={onPieceDrop}
-        customBoardStyle={{
-          borderRadius: "4px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-        }}
-        customArrowColor="rgb(0,0,0)"
-        customLightSquareStyle={{
-          backgroundColor: "#676767",
-        }}
-        customDarkSquareStyle={{
-          backgroundColor: "#383838",
-        }}
-        showBoardNotation={false}
-        boardOrientation="black"
-      />
-      {/* Display whose turn it is */}
+    <div className="relative cursor-pointer z-50">
+      <div className="relative z-10">
+        <Chessboard
+          id="StyledBoard"
+          position={game.fen()}
+          customBoardStyle={{
+            borderRadius: "4px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+            zIndex: 1,
+          }}
+          customArrowColor="rgb(0,0,0)"
+          customLightSquareStyle={{
+            backgroundColor: "#676767",
+            cursor: "pointer",
+          }}
+          customDarkSquareStyle={{
+            backgroundColor: "#383838",
+            cursor: "pointer",
+          }}
+          showBoardNotation={false}
+          arePiecesDraggable={false}
+          boardOrientation="white"
+        />
+      </div>
+
+      {/* Transparent overlay for redirect */}
+      <div
+        className="absolute inset-0 z-20 bg-transparent cursor-pointer"
+        onClick={handleBoardClick}
+      ></div>
+
       <div className="self-center lg:mt-6 mt-3 text-center">
         {game.turn() === "w" ? "Ruch białych" : "Ruch czarnych"}
       </div>

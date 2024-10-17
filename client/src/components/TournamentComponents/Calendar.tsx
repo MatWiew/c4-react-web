@@ -3,6 +3,11 @@ import Calendar from "rsuite/Calendar";
 import "rsuite/dist/rsuite.min.css";
 import "./Calendar.css";
 import Pawn from "../../assets/Pawn";
+import Bishop from "../../assets/Bishop";
+import Knight from "../../assets/Knight";
+import Queen from "../../assets/Queen";
+import King from "../../assets/King";
+import Rook from "../../assets/Rook";
 import CustomCalendarHeader from "./CustomCalendarHeader";
 import CustomMonthHeader from "./CustomMonthHeader";
 
@@ -13,6 +18,7 @@ interface Event {
   round_number: number;
   place: string;
   page: string;
+  icon: "pawn" | "bishop" | "knight" | "queen" | "king" | "rook";
 }
 
 const CalendarC: React.FC<{
@@ -67,10 +73,41 @@ const CalendarC: React.FC<{
     if (list.length) {
       return (
         <div className="absolute w-12 h-5">
-          <Pawn
-            size={18}
-            className="absolute right-0 transform translate-x-1/2 -translate-y-1/2 z-10"
-          />
+          {list.map((event, index) => {
+            let IconComponent;
+
+            // Map the icon string to the corresponding component
+            switch (event.icon) {
+              case "pawn":
+                IconComponent = Pawn;
+                break;
+              case "bishop":
+                IconComponent = Bishop;
+                break;
+              case "knight":
+                IconComponent = Knight;
+                break;
+              case "queen":
+                IconComponent = Queen;
+                break;
+              case "king":
+                IconComponent = King;
+                break;
+              case "rook":
+                IconComponent = Rook;
+                break;
+              default:
+                return null;
+            }
+
+            return (
+              <IconComponent
+                key={index}
+                size={18}
+                className="absolute right-0 transform translate-x-1/2 -translate-y-1/2 z-10"
+              />
+            );
+          })}
         </div>
       );
     }
