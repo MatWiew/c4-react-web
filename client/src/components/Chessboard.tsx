@@ -2,37 +2,48 @@ import React, { useState, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 
-export type Puzzle = {
-  title: string;
-  url: string;
-  publish_time: number;
-  fen: string;
-  pgn: string;
-  image: string;
-  moves: string[]; // If you need to store the moves separately
+export type LichessPuzzle = {
+  game: {
+    id: string;
+    pgn: string;
+    clock: { initial: number; increment: number; totalTime: number };
+  };
+  puzzle: {
+    rating: number;
+    id: string;
+    initialPly: number;
+    solution: string[];
+    themes: string[];
+    fen: string;
+  };
 };
 
 const InteractiveChessboard: React.FC = () => {
   const [game, setGame] = useState(new Chess());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [puzzleUrl, setPuzzleUrl] = useState<string | null>(null); // Store the fetched puzzle URL
+  const [puzzleId, setPuzzleId] = useState<string | null>(null); // Store the fetched puzzle ID
 
   useEffect(() => {
     const fetchPuzzle = async () => {
       try {
-        const response = await fetch("https://api.chess.com/pub/puzzle/random");
+        const response = await fetch("https://lichess.org/api/puzzle/daily");
         if (!response.ok) {
-          throw new Error("Failed to fetch puzzle");
+          throw new Error("Failed to fetch Lichess puzzle");
         }
-        const puzzleData: Puzzle = await response.json();
+        const puzzleData: LichessPuzzle = await response.json();
 
-        if (!puzzleData.fen || !puzzleData.pgn) {
-          throw new Error("Puzzle data is invalid");
+        if (!puzzleData.game.pgn) {
+          console.log(puzzleData);
+          throw new Error("Puzzle PGN is missing");
         }
 
-        setGame(new Chess(puzzleData.fen));
-        setPuzzleUrl(puzzleData.url); // Store the puzzle URL
+        // Load the game with PGN
+        const newGame = new Chess();
+        newGame.loadPgn(puzzleData.game.pgn); // Set the game using the PGN data
+
+        setGame(newGame); // Update the game state with the loaded PGN
+        setPuzzleId(puzzleData.puzzle.id); // Store the puzzle ID for Lichess URL
       } catch (error) {
         setError((error as Error).message);
         setGame(new Chess());
@@ -52,10 +63,12 @@ const InteractiveChessboard: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  // Redirect to the fetched puzzle URL on board click
+  // Redirect to the specific Lichess puzzle page on board click
   const handleBoardClick = () => {
-    if (puzzleUrl) {
-      window.open(puzzleUrl, "_blank"); // Open the fetched puzzle URL in a new tab
+    if (puzzleId) {
+      const lichessPuzzleUrl = `https://lichess.org/training/${puzzleId}`;
+
+      window.open(lichessPuzzleUrl, "_blank"); // Open the specific Lichess puzzle in a new tab
     }
   };
 

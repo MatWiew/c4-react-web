@@ -28,7 +28,7 @@ const FootEnd: React.FC<FootEndProps> = ({ scrollToDesiredContent }) => {
           {/* Set color to white for visibility */}
         </div>
         <nav className="flex items-start pr-5 max-md:w-full max-md:justify-between">
-          <NavigationLinks scrollToDesiredContent={scrollToDesiredContent} />
+          <NavigationLinks />
           <SocialLinks />
         </nav>
       </motion.footer>
@@ -37,7 +37,8 @@ const FootEnd: React.FC<FootEndProps> = ({ scrollToDesiredContent }) => {
         style={{ backgroundColor: "#DBFF00" }}
       >
         <p className="text-black md:text-[1rem] max-md:text-[2vw] font-semibold">
-          <span className="font-extrabold">©</span> 2024 Mateusz Wiewióra. All rights reserved.
+          <span className="font-extrabold">©</span> 2024 Mateusz Wiewióra. All
+          rights reserved.
         </p>
       </div>
     </>
