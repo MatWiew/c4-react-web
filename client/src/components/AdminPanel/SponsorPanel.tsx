@@ -7,6 +7,13 @@ interface Sponsor {
   image_url: string;
 }
 
+interface SponsorData {
+  src: string;
+  alt: string;
+  className: string;
+  _id: string; // Add an id field for deletion
+}
+
 const SponsorPanel: React.FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [name, setName] = useState("");
@@ -87,12 +94,20 @@ const SponsorPanel: React.FC = () => {
           }
         );
         if (!response.ok) throw new Error("Failed to delete sponsor");
-        fetchSponsors();
+        fetchSponsors(); // Re-fetch sponsors after deletion
       } catch (error) {
         console.error(error);
       }
     }
   };
+
+  // Convert Sponsor to SponsorData for the SponsorSectionA
+  const sponsorDataList: SponsorData[] = sponsors.map((sponsor) => ({
+    src: sponsor.image_url,
+    alt: sponsor.name,
+    className: "w-6/12 max-md:w-full",
+    _id: sponsor._id,
+  }));
 
   return (
     <div className="p-5 mt-12 bg-gray-800 text-white rounded-md w-3/4 mx-auto">
@@ -119,11 +134,14 @@ const SponsorPanel: React.FC = () => {
           />
         </div>
         <button type="submit" className="bg-blue-500 p-2 rounded-md">
-          "Dodaj sponsora"
+          Dodaj sponsora
         </button>
       </form>
 
-      <SponsorSectionA />
+      <SponsorSectionA
+        sponsors={sponsorDataList}
+        onSponsorDelete={handleDelete}
+      />
     </div>
   );
 };

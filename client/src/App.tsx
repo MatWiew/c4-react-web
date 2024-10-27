@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import Menu from "./components/Menu";
 import About from "./components/About";
@@ -10,13 +10,11 @@ import Club from "./components/Club";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Admin from "./components/Admin";
-import CookieConsentModal from "./components/CookieConsentModal";
+import "vanilla-cookieconsent/dist/cookieconsent.css";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
-
-  const [isModalOpen, setIsModalOpen] = useState(true);
 
   // Create refs for each section
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -92,11 +90,6 @@ const App: React.FC = () => {
           <Club ref={clubRef} />
           <Contact ref={contactRef} />
           <Footer scrollToDesiredContent={scrollToDesiredContent} />
-
-          <CookieConsentModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          />
         </>
       )}
     </div>

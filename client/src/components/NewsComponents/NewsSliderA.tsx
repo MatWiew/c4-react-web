@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -18,52 +18,34 @@ interface Article {
 }
 
 interface NewsSliderProps {
+  articles: Article[]; // Accept articles as a prop
   onClick?: (article: Article) => void; // Accept article as argument
 }
 
-const NewsSliderA: React.FC<NewsSliderProps> = ({ onClick }) => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [showArchive, setShowArchive] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+const NewsSliderA: React.FC<NewsSliderProps> = ({ articles, onClick }) => {
+  const [showArchive, setShowArchive] = React.useState(false);
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/articles");
-        const data: Article[] = await response.json();
+  const sortedArticles = React.useMemo(() => {
+    const secondArticle = articles.find((article) => article.isSecond);
+    const otherArticles = articles.filter((article) => !article.isSecond);
 
-        const secondArticle = data.find((article) => article.isSecond);
-        const otherArticles = data.filter((article) => !article.isSecond);
+    // Sort other articles by date (newest first)
+    const sortedOtherArticles = otherArticles.sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      return dateB.getTime() - dateA.getTime(); // Sort in descending order
+    });
 
-        // Sort other articles by date (newest first)
-        const sortedOtherArticles = otherArticles.sort((a, b) => {
-          // Assuming the date is in a string format, convert to Date objects
-          const dateA = new Date(a.created_at);
-          const dateB = new Date(b.created_at);
-          return dateB.getTime() - dateA.getTime(); // Sort in descending order
-        });
+    const finalArticles = secondArticle
+      ? [sortedOtherArticles[0], secondArticle, ...sortedOtherArticles.slice(1, 2)]
+      : sortedOtherArticles.slice(0, 3);
 
-        if (secondArticle) {
-          setArticles([
-            sortedOtherArticles[0], // First article
-            secondArticle, // Second article
-            ...sortedOtherArticles.slice(1, 2), // Third article, if available
-          ]);
-        } else {
-          setArticles(sortedOtherArticles.slice(0, 3)); // Limit to 3 if no second article
-        }
-      } catch (error) {
-        console.error("Failed to fetch articles:", error);
-      }
-    };
-
-    fetchArticles();
-  }, []);
+    return finalArticles;
+  }, [articles]);
 
   const handleClose = (article: any) => {
     setShowArchive(false); // Close the archive
     if (article) {
-      setSelectedArticle(article); // Set the selected article for editing
       onClick?.(article);
       console.log(article);
     }
@@ -104,8 +86,8 @@ const NewsSliderA: React.FC<NewsSliderProps> = ({ onClick }) => {
   return (
     <>
       <Slider {...settings}>
-        {articles.length > 0 ? (
-          articles.slice(0, 3).map((article) => (
+        {sortedArticles.length > 0 ? (
+          sortedArticles.slice(0, 3).map((article) => (
             <div
               key={article._id}
               onClick={() => onClick?.(article)}

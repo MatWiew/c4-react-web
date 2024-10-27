@@ -139,9 +139,9 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
           >
             <Pawn size={30} className="" />
           </div>
-          <div className="flex py-9 px-3 h-full text-center">
+          <div className="flex px-3 h-full text-center min-w-[300px] max-w-[550px]">
             {selectedEvent ? (
-              <div className="mx-auto">
+              <div className="mx-auto my-auto h-5/6">
                 <p className="text-xl font-bold mb-5">{selectedEvent.name}</p>
                 <p className="italic text-base mt-8">
                   <span className="text-white font-bold">Liczba rund:</span>{" "}

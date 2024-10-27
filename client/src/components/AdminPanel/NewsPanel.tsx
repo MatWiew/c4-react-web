@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css"; // Quill's CSS
 import NewsSliderA from "../NewsComponents/NewsSliderA";
 
 const NewsPanel = () => {
+  const [articles, setArticles] = useState<Article[]>([]); // State to hold articles
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>(""); // This will store HTML formatted content
@@ -14,6 +15,29 @@ const NewsPanel = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Fetch articles on mount
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/articles");
+        if (!response.ok) throw new Error("Error fetching articles");
+        const data = await response.json();
+
+        // Convert dates to Date objects
+        const formattedData = data.map((article: any) => ({
+          ...article,
+          created_at: new Date(article.created_at),
+          updated_at: new Date(article.updated_at),
+        }));
+
+        setArticles(formattedData); // Set the fetched articles
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    fetchArticles();
+  }, []);
   // Set article data when selected
   useEffect(() => {
     if (selectedArticle) {
@@ -73,6 +97,7 @@ const NewsPanel = () => {
       content,
       image_url: imageUrl,
       isSecond,
+      updated_at: new Date(),
     };
 
     try {
@@ -106,6 +131,20 @@ const NewsPanel = () => {
           console.error("Error response:", errorResponse); // Log error response
           throw new Error("Nie udało się zapisać nowego artykułu");
         }
+
+        const newArticle = await response.json(); // Get the new or updated article from response
+
+        // Update articles state
+        setArticles((prev) => {
+          if (selectedArticle) {
+            // Update existing article
+            return prev.map((article) =>
+              article._id === selectedArticle._id ? { ...newArticle } : article
+            );
+          }
+          // Add new article if no article was selected
+          return [...prev, newArticle];
+        });
       } else {
         // Update the article normally
         const response = selectedArticle
@@ -132,6 +171,20 @@ const NewsPanel = () => {
           console.error("Error response:", errorResponse); // Log error response
           throw new Error("Nie udało się zapisać artykułu");
         }
+
+        // Update articles state
+        if (selectedArticle) {
+          setArticles((prev) =>
+            prev.map((article) =>
+              article._id === selectedArticle._id
+                ? { ...article, ...articleData }
+                : article
+            )
+          );
+        } else {
+          const newArticle = await response.json();
+          setArticles((prev) => [...prev, newArticle]);
+        }
       }
 
       // Clear the input fields
@@ -147,7 +200,8 @@ const NewsPanel = () => {
           : "Artykuł dodany pomyślnie!"
       );
 
-      window.location.reload();
+      // Remove selection after submission
+      setSelectedArticle(null);
     } catch (error) {
       console.error("Error occurred during submission:", error); // Log full error
       setError((error as Error).message);
@@ -176,15 +230,22 @@ const NewsPanel = () => {
         throw new Error("Nie udało się usunąć artykułu");
       }
 
+      // Update articles state to remove the deleted article
+      setArticles((prev) =>
+        prev.filter((article) => article._id !== selectedArticle._id)
+      );
+
       alert("Artykuł usunięty pomyślnie!");
 
+      // Clear the input fields
       setTitle("");
       setContent("");
       setImageUrl("");
       setIsSecond(false);
       setIsLatest(false); // Reset the checkbox after deletion
 
-      window.location.reload();
+      // Remove selection after deletion
+      setSelectedArticle(null);
     } catch (error) {
       setError((error as Error).message);
     } finally {
@@ -228,7 +289,7 @@ const NewsPanel = () => {
           </div>
           <div>
             <label htmlFor="imageUrl" className="block mb-1 text-white">
-              URL do zdjęcia:
+              URL zdjęcia:
             </label>
             <input
               type="text"
@@ -239,65 +300,57 @@ const NewsPanel = () => {
               className="border rounded p-2 w-full"
             />
           </div>
-          <div>
-            <label htmlFor="isSecond" className="mb-1 text-white">
-              Czy artykuł ma być na pozycji drugiej:
-            </label>
+          <div className="flex items-center">
             <input
               type="checkbox"
               id="isSecond"
               checked={isSecond}
               onChange={(e) => setIsSecond(e.target.checked)}
-              className="border rounded p-2 ml-5"
             />
+            <label htmlFor="isSecond" className="ml-2 text-white">
+              Ustaw artykuł jako drugi
+            </label>
           </div>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="isLatest"
+              checked={isLatest}
+              onChange={(e) => setIsLatest(e.target.checked)}
+            />
+            <label htmlFor="isLatest" className="ml-2 text-white">
+              Ustaw artykuł jako najnowszy
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white rounded p-2"
+            disabled={loading}
+          >
+            {selectedArticle ? "Zaktualizuj artykuł" : "Dodaj artykuł"}
+          </button>
           {selectedArticle && (
-            <div>
-              <label htmlFor="isLatest" className="mb-1 text-white">
-                Ustaw artykuł jako najnowszy:
-              </label>
-              <input
-                type="checkbox"
-                id="isLatest"
-                checked={isLatest}
-                onChange={(e) => setIsLatest(e.target.checked)}
-                className="border rounded p-2 ml-5"
-              />
-            </div>
-          )}
-          <div className="flex flex-col gap-4">
+            <>
             <button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-500 text-white p-2 rounded hover:bg-blue-200 w-full"
+              type="button"
+              onClick={handleDelete}
+              className="bg-red-500 text-white rounded p-2 mt-2"
             >
-              {loading ? "Zapisywanie..." : "Zapisz artykuł"}
+              Usuń artykuł
             </button>
-            {selectedArticle && (
-              <>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={loading}
-                  className="bg-red-500 text-white p-2 mt-4 rounded hover:bg-red-200 w-full"
-                >
-                  {loading ? "Usuwanie..." : "Usuń artykuł"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedArticle(null)}
-                  disabled={loading}
-                  className="bg-gray-500 text-white p-2 mt-4 rounded hover:bg-gray-300 w-full"
-                >
-                  {loading ? "Resetowanie..." : "Nowy artykuł"}
-                </button>
-              </>
-            )}
-          </div>
+            <button
+            type="button"
+            onClick={() => setSelectedArticle(null)}
+            className="bg-gray-500 text-white rounded p-2 mt-2"
+          >
+            Utwórz nowy
+          </button>
+          </>
+          )}
         </form>
       </div>
-      <div className="w-3/4 mx-auto">
-        <NewsSliderA onClick={setSelectedArticle} />
+      <div className="w-4/5 mx-auto max-w-[1200px]">
+        <NewsSliderA articles={articles} onClick={setSelectedArticle} />
       </div>
     </>
   );

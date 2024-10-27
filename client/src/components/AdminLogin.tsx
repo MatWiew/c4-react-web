@@ -18,7 +18,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await fetch("/admin/login", {
+      const response = await fetch("http://localhost:5000/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

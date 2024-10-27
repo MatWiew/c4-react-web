@@ -14,9 +14,15 @@ const LeaderboardItemA: React.FC<LeaderboardItemProps> = ({
   onClick,
 }) => {
   return (
-    <div onClick={onClick} className="cursor-pointer hover:bg-gray-700 p-2">
-      <span>{rank}</span>. <span>{name}</span>{" "}
-      {score !== undefined && <span>({score})</span>}
+    <div
+      onClick={onClick}
+      className="cursor-pointer hover:bg-gray-700 p-2 flex justify-between items-center"
+    >
+      <div className="flex items-center">
+        <span className="font-semibold">{rank}</span>
+        <span className="ml-2">{name}</span>
+      </div>
+      {score !== undefined && <span className="text-gray-400">({score})</span>}
     </div>
   );
 };

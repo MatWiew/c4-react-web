@@ -94,7 +94,7 @@ const InteractiveChessboard: React.FC = () => {
           }}
           showBoardNotation={false}
           arePiecesDraggable={false}
-          boardOrientation="white"
+          boardOrientation={game.turn() === "w" ? "white" : "black"}
         />
       </div>
 

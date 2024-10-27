@@ -2,16 +2,17 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const navigationItems = [
-  { name: "Statut klubu", url: "https://www.wikipedia.org" },
-  { name: "Aktualności", url: "news" },
-  { name: "Turnieje", url: "tournaments" },
-  { name: "Klub", url: "club" },
-  { name: "Kontakt", url: "contact" },
+  { name: "Statut klubu", url: "/statut" },
+  { name: "Polityka prywatności", url: "/privacy-policy" },
+  {
+    name: "Mateusz Wiewióra",
+    url: "https://www.linkedin.com/in/mateusz-wiewi%C3%B3ra-bb9b402bb/",
+  },
 ];
 
 const NavigationLinks: React.FC = () => {
   return (
-    <ul className="flex flex-col justify-between py-2 max-md:py-7 text-2xl text-white h-[285px] max-md:ml-[15vw] mr-12 max-md:text-center">
+    <ul className="flex flex-col justify-center gap-12 py-2 max-md:py-7 text-2xl text-white h-[285px] max-md:ml-[15vw] mr-12 max-md:text-center">
       {navigationItems.map((item, index) => (
         <li key={index}>
           <motion.a

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import CalendarC from "../TournamentComponents/Calendar";
+import React, { useState, useEffect } from "react";
+import CalendarC from "../TournamentComponents/CalendarA";
 import Pawn from "../../assets/Pawn";
 import Bishop from "../../assets/Bishop";
 import Knight from "../../assets/Knight";
@@ -28,6 +28,7 @@ const iconComponents = {
 };
 
 const TournamentsPanel: React.FC = () => {
+  const [tournaments, setTournaments] = useState<Event[]>([]);
   const [name, setName] = useState<string>("");
   const [date, setDate] = useState<Date | null>(null);
   const [type, setType] = useState<string>("blitz"); // Default to "blitz"
@@ -40,6 +41,25 @@ const TournamentsPanel: React.FC = () => {
   const [icon, setIcon] = useState<
     "pawn" | "bishop" | "knight" | "queen" | "king" | "rook"
   >("pawn");
+
+  useEffect(() => {
+    fetchTournaments();
+  }, []);
+
+  const fetchTournaments = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/tournaments");
+      if (!response.ok) throw new Error("Failed to fetch tournaments");
+      const data: Event[] = await response.json();
+      const convertedEvents = data.map((event) => ({
+        ...event,
+        date: new Date(event.date), // Ensure this is a valid date
+      }));
+      setTournaments(convertedEvents);
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  };
 
   const handleDateChange = (date: Date, events: Event[]) => {
     if (events.length > 0) {
@@ -79,7 +99,6 @@ const TournamentsPanel: React.FC = () => {
       const existingResponse = await fetch(
         `http://localhost:5000/api/tournaments?date=${dateString}`
       );
-
       if (!existingResponse.ok) {
         setError("Nie udało się pobrać istniejących turniejów");
         setLoading(false);
@@ -152,6 +171,8 @@ const TournamentsPanel: React.FC = () => {
         alert("Turniej dodany pomyślnie!");
       }
 
+      // Fetch updated tournaments after submission
+      await fetchTournaments();
       // Reset form fields after submission
       setName("");
       setDate(null);
@@ -161,7 +182,6 @@ const TournamentsPanel: React.FC = () => {
       setPage("");
       setSelectedEvent(null);
       setIcon("pawn"); // Reset icon after submit
-      window.location.reload();
     } catch (error) {
       setError((error as Error).message);
     } finally {
@@ -195,7 +215,8 @@ const TournamentsPanel: React.FC = () => {
         setRoundNumber(0);
         setPlace("");
         setPage("");
-        window.location.reload();
+        // Fetch updated tournaments after deletion
+        await fetchTournaments();
       } catch (error) {
         setError((error as Error).message);
       }
@@ -254,7 +275,6 @@ const TournamentsPanel: React.FC = () => {
                   e.target.value as "blitz" | "rapid" | "classical" | "bullet"
                 )
               }
-              required
               className="border rounded p-2 w-full"
             >
               <option value="blitz">Blitz</option>
@@ -264,12 +284,12 @@ const TournamentsPanel: React.FC = () => {
             </select>
           </div>
           <div>
-            <label htmlFor="roundNumber" className="block mb-1 text-white">
-              Liczba rund:
+            <label htmlFor="round_number" className="block mb-1 text-white">
+              Numer rundy:
             </label>
             <input
               type="number"
-              id="roundNumber"
+              id="round_number"
               value={roundNumber}
               onChange={(e) => setRoundNumber(Number(e.target.value))}
               required
@@ -304,6 +324,7 @@ const TournamentsPanel: React.FC = () => {
           </div>
           <div>
             <label className="block mb-1 text-white">Ikona turnieju:</label>
+            {/* Icon buttons */}
             <div className="flex space-x-4">
               {Object.entries(iconComponents).map(([key, IconComponent]) => (
                 <div
@@ -340,23 +361,20 @@ const TournamentsPanel: React.FC = () => {
               ))}
             </div>
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 w-full"
-          >
+          <button type="submit" className="bg-blue-600 text-white rounded p-2">
             {selectedEvent ? "Zaktualizuj turniej" : "Dodaj turniej"}
           </button>
         </form>
         {selectedEvent && (
           <button
             onClick={handleDelete}
-            className="mt-4 bg-red-500 text-white p-2 rounded hover:bg-red-700 w-full"
+            className="bg-red-600 text-white rounded p-2 mt-4 w-full"
           >
             Usuń turniej
           </button>
         )}
       </div>
-      <CalendarC onDateChange={handleDateChange} />
+      <CalendarC events={tournaments} onDateChange={handleDateChange} />
     </>
   );
 };

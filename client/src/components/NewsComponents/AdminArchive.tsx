@@ -12,7 +12,15 @@ const AdminArchive: React.FC<{ onClose: (selectedArticle: any) => void }> = ({
       try {
         const response = await fetch("http://localhost:5000/api/articles");
         const data = await response.json();
-        setArticles(data);
+
+        // Sort articles by created_at date (newest first)
+        const sortedArticles = data.sort((a: any, b: any) => {
+          const dateA = new Date(a.created_at); // Ensure created_at is a Date object
+          const dateB = new Date(b.created_at);
+          return dateB.getTime() - dateA.getTime(); // Sort in descending order
+        });
+
+        setArticles(sortedArticles); // Set the sorted articles
       } catch (error) {
         console.error("Failed to fetch articles:", error);
       } finally {

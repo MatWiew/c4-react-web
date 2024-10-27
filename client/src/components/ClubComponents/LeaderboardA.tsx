@@ -4,67 +4,52 @@ import LeaderboardItemA from "./LeaderboardItemA";
 interface LeaderboardEntry {
   _id: string;
   rank: number;
-  name: string;
-  score?: number;
+  fullname: string;
+  rating?: number;
 }
 
 interface LeaderboardProps {
+  players: LeaderboardEntry[];
   onPlayerSelect: (player: LeaderboardEntry) => void;
+  onPlayerUpdate: (player: LeaderboardEntry) => void;
 }
 
-const LeaderboardA: React.FC<LeaderboardProps> = ({ onPlayerSelect }) => {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
-    []
-  );
+const LeaderboardA: React.FC<LeaderboardProps> = ({
+  players,
+  onPlayerSelect,
+}) => {
+  const [leaderboardData, setLeaderboardData] =
+    useState<LeaderboardEntry[]>(players);
 
   useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/topplayers");
-        if (!response.ok) {
-          throw new Error("Failed to fetch leaderboard data");
-        }
-        const data = await response.json();
-        const formattedData = data.map(
-          (
-            player: { _id: string; fullname: string; rating: number },
-            index: number
-          ) => ({
-            _id: player._id,
-            rank: index + 1,
-            name: player.fullname,
-            score: player.rating,
-          })
-        );
-        setLeaderboardData(formattedData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchLeaderboardData();
-  }, []);
+    // Update leaderboard data when players prop changes
+    setLeaderboardData(players);
+  }, [players]);
 
   // Function to delete a player
-  const handleDeletePlayer = async (id: string) => {
+  const handleDeletePlayer = async (_id: string) => {
     if (window.confirm("Czy jesteś pewien że chcesz usunąć tego zawodnika?")) {
       try {
+        // Optimistically update the state before sending the delete request
+        setLeaderboardData((prevData) =>
+          prevData.filter((player) => player._id !== _id)
+        );
+
         const response = await fetch(
-          `http://localhost:5000/api/topplayers/${id}`,
+          `http://localhost:5000/api/topplayers/${_id}`,
           {
             method: "DELETE",
           }
         );
+
         if (!response.ok) {
-          throw new Error("Failed to delete player");
+          throw new Error("Nie udało się usunąć zawodnika");
         }
-        setLeaderboardData(
-          leaderboardData.filter((player) => player._id !== id)
-        ); // Remove player from local state
+
         alert("Zawodnik usunięty pomyślnie!");
       } catch (error) {
         console.error(error);
-        alert("Error deleting player");
+        alert("Wystąpił błąd podczas usuwania zawodnika");
       }
     }
   };
@@ -74,16 +59,16 @@ const LeaderboardA: React.FC<LeaderboardProps> = ({ onPlayerSelect }) => {
       {leaderboardData.length === 0 ? (
         <p className="text-red-500">Brak zawodników</p>
       ) : (
-        leaderboardData.map((entry) => (
+        leaderboardData.map((entry, index) => (
           <div key={entry._id} className="flex justify-between items-center">
             <LeaderboardItemA
-              rank={entry.rank}
-              name={entry.name}
-              score={entry.score}
+              rank={index + 1} // Use the index for ranking
+              name={entry.fullname} // Correctly accessing fullname
+              score={entry.rating} // Correctly accessing rating
               onClick={() => onPlayerSelect(entry)}
             />
             <button
-              onClick={() => handleDeletePlayer(entry._id)}
+              onClick={() => handleDeletePlayer(entry._id)} // Ensure correct ID is passed
               className="text-red-500 bg-red-700 p-2 rounded-md"
             >
               Usuń
