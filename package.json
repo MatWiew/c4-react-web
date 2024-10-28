@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "react-slick": "^0.30.2"
+  },
+  "devDependencies": {
+    "@types/http-proxy": "^1.17.15"
   }
 }

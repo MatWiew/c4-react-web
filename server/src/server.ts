@@ -112,10 +112,14 @@ interface ITopPlayer extends mongoose.Document {
 // Define the TopPlayers schema
 const TopPlayersSchema = new mongoose.Schema({
   fullname: { type: String, required: true },
-  rating: { type: Number, required: true } // Use Number type for ratings
+  rating: { type: Number, required: true }, // Use Number type for ratings
 });
 
-const TopPlayers = mongoose.model<ITopPlayer>("TopPlayers", TopPlayersSchema, "TopPlayers");
+const TopPlayers = mongoose.model<ITopPlayer>(
+  "TopPlayers",
+  TopPlayersSchema,
+  "TopPlayers"
+);
 
 interface ITrainers extends mongoose.Document {
   fullname: string;
@@ -126,8 +130,11 @@ const TrainersSchema = new mongoose.Schema({
   fullname: { type: String, required: true },
 });
 
-const Trainers = mongoose.model<ITrainers>("Trainers", TrainersSchema, "Trainers");
-
+const Trainers = mongoose.model<ITrainers>(
+  "Trainers",
+  TrainersSchema,
+  "Trainers"
+);
 
 // Email sending endpoint
 app.post("/api/send-email", async (req: Request, res: Response) => {
@@ -255,36 +262,50 @@ app.post("/admin/register", async (req: Request, res: Response) => {
 });
 
 // Get all sponsors
-app.get('/api/sponsors', async (req: Request, res: Response) => {
+app.get("/api/sponsors", async (req: Request, res: Response) => {
   try {
     const sponsors = await Sponsor.find(); // Fetch all sponsors from the database
     res.json(sponsors); // Send sponsors as JSON response
   } catch (error) {
     console.error("Error fetching sponsors:", error);
-    res.status(500).json({ message: 'Failed to fetch sponsors', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to fetch sponsors",
+        error: (error as Error).message,
+      });
   }
 });
 
 // Add a sponsor
-app.post('/api/sponsors', async (req: Request, res: Response) => {
+app.post("/api/sponsors", async (req: Request, res: Response) => {
   const { name, image_url } = req.body;
 
   if (!name || !image_url) {
-    return res.status(400).json({ message: "Name and image URL are required." });
+    return res
+      .status(400)
+      .json({ message: "Name and image URL are required." });
   }
 
   try {
     const newSponsor = new Sponsor({ name, image_url });
     await newSponsor.save();
-    res.status(201).json({ message: "Sponsor added successfully", sponsor: newSponsor });
+    res
+      .status(201)
+      .json({ message: "Sponsor added successfully", sponsor: newSponsor });
   } catch (error) {
     console.error("Error adding sponsor:", error);
-    res.status(500).json({ message: 'Failed to add sponsor', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to add sponsor",
+        error: (error as Error).message,
+      });
   }
 });
 
 // Delete a sponsor
-app.delete('/api/sponsors/:id', async (req: Request, res: Response) => {
+app.delete("/api/sponsors/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -297,10 +318,14 @@ app.delete('/api/sponsors/:id', async (req: Request, res: Response) => {
     res.json({ message: "Sponsor deleted successfully" });
   } catch (error) {
     console.error("Error deleting sponsor:", error);
-    res.status(500).json({ message: 'Failed to delete sponsor', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to delete sponsor",
+        error: (error as Error).message,
+      });
   }
 });
-
 
 // API Routes for Articles
 app.get("/api/articles", async (req: Request, res: Response) => {
@@ -379,7 +404,7 @@ app.get("/api/tournaments", async (req: Request, res: Response) => {
 
     // Check if date exists and is a string
     let tournaments;
-    if (typeof date === 'string') {
+    if (typeof date === "string") {
       const parsedDate = new Date(date);
       tournaments = await Tournament.find({
         date: {
@@ -393,10 +418,11 @@ app.get("/api/tournaments", async (req: Request, res: Response) => {
 
     res.json(tournaments);
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: (err as Error).message });
+    res
+      .status(500)
+      .json({ message: "Server error", error: (err as Error).message });
   }
 });
-
 
 app.post("/api/tournaments", async (req: Request, res: Response) => {
   console.log(req.body);
@@ -404,7 +430,9 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
 
   try {
     // Check if a tournament already exists for the specified date
-    const existingTournament = await Tournament.findOne({ date: new Date(date) });
+    const existingTournament = await Tournament.findOne({
+      date: new Date(date),
+    });
 
     if (existingTournament) {
       // If tournament exists, update it
@@ -416,7 +444,10 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
       existingTournament.icon = icon;
 
       const updatedTournament = await existingTournament.save();
-      return res.json({ message: "Tournament updated successfully", tournament: updatedTournament });
+      return res.json({
+        message: "Tournament updated successfully",
+        tournament: updatedTournament,
+      });
     } else {
       // If no tournament exists, create a new one
       const newTournament = new Tournament({
@@ -429,7 +460,10 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
         icon,
       });
       await newTournament.save();
-      return res.json({ message: "Tournament created successfully", tournament: newTournament });
+      return res.json({
+        message: "Tournament created successfully",
+        tournament: newTournament,
+      });
     }
   } catch (err) {
     res.status(400).json({
@@ -438,7 +472,6 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
     });
   }
 });
-
 
 app.put("/api/tournaments/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -478,39 +511,52 @@ app.delete("/api/tournaments/:id", async (req: Request, res: Response) => {
 });
 
 //topplayers endpoints
-app.get('/api/topplayers', async (req, res) => {
+app.get("/api/topplayers", async (req, res) => {
   try {
     const players = await TopPlayers.find().sort({ rating: -1 }); // Sort by rating in descending order
     res.json(players);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error while fetching top players' });
+    res
+      .status(500)
+      .json({ message: "Server error while fetching top players" });
   }
 });
 
-app.post('/api/topplayers', async (req: Request, res: Response) => {
+app.post("/api/topplayers", async (req: Request, res: Response) => {
   const { fullname, rating } = req.body;
 
   if (!fullname || rating === undefined) {
-    return res.status(400).json({ message: "Full name and rating are required." });
+    return res
+      .status(400)
+      .json({ message: "Full name and rating are required." });
   }
 
   try {
     const newPlayer = new TopPlayers({ fullname, rating });
     await newPlayer.save();
-    res.status(201).json({ message: "Top player added successfully", player: newPlayer });
+    res
+      .status(201)
+      .json({ message: "Top player added successfully", player: newPlayer });
   } catch (error) {
     console.error("Error adding top player:", error);
-    res.status(500).json({ message: 'Failed to add top player', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to add top player",
+        error: (error as Error).message,
+      });
   }
 });
 
-app.put('/api/topplayers/:id', async (req: Request, res: Response) => {
+app.put("/api/topplayers/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { fullname, rating } = req.body;
 
   if (!fullname || rating === undefined) {
-    return res.status(400).json({ message: "Full name and rating are required." });
+    return res
+      .status(400)
+      .json({ message: "Full name and rating are required." });
   }
 
   try {
@@ -527,17 +573,22 @@ app.put('/api/topplayers/:id', async (req: Request, res: Response) => {
     res.json({ message: "Player updated successfully", player: updatedPlayer });
   } catch (error) {
     console.error("Error updating player:", error);
-    res.status(500).json({ message: 'Failed to update player', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to update player",
+        error: (error as Error).message,
+      });
   }
 });
 
-app.delete('/api/topplayers/:id', async (req: Request, res: Response) => {
+app.delete("/api/topplayers/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log("Deleting player with ID:", id);
-  
+
   try {
     const result = await TopPlayers.findByIdAndDelete(id);
-    
+
     if (!result) {
       return res.status(404).json({ message: "Player not found" });
     }
@@ -545,22 +596,27 @@ app.delete('/api/topplayers/:id', async (req: Request, res: Response) => {
     res.json({ message: "Player deleted successfully" });
   } catch (error) {
     console.error("Error deleting player:", error);
-    res.status(500).json({ message: 'Failed to delete player', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to delete player",
+        error: (error as Error).message,
+      });
   }
 });
 
 //trainers endpoint
-app.get('/api/trainers', async (req, res) => {
+app.get("/api/trainers", async (req, res) => {
   try {
     const trainers = await Trainers.find();
     res.json(trainers);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error while fetching trainers' });
+    res.status(500).json({ message: "Server error while fetching trainers" });
   }
 });
 
-app.post('/api/trainers', async (req: Request, res: Response) => {
+app.post("/api/trainers", async (req: Request, res: Response) => {
   const { fullname } = req.body;
 
   if (!fullname) {
@@ -570,14 +626,21 @@ app.post('/api/trainers', async (req: Request, res: Response) => {
   try {
     const newTrainer = new Trainers({ fullname });
     await newTrainer.save();
-    res.status(201).json({ message: "Trainer added successfully", trainer: newTrainer });
+    res
+      .status(201)
+      .json({ message: "Trainer added successfully", trainer: newTrainer });
   } catch (error) {
     console.error("Error adding trainer:", error);
-    res.status(500).json({ message: 'Failed to add trainer', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to add trainer",
+        error: (error as Error).message,
+      });
   }
 });
 
-app.put('/api/trainers/:id', async (req: Request, res: Response) => {
+app.put("/api/trainers/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { fullname } = req.body;
 
@@ -596,14 +659,22 @@ app.put('/api/trainers/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Trainer not found" });
     }
 
-    res.json({ message: "Trainer updated successfully", trainer: updatedTrainer });
+    res.json({
+      message: "Trainer updated successfully",
+      trainer: updatedTrainer,
+    });
   } catch (error) {
     console.error("Error updating trainer:", error);
-    res.status(500).json({ message: 'Failed to update trainer', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to update trainer",
+        error: (error as Error).message,
+      });
   }
 });
 
-app.delete('/api/trainers/:id', async (req: Request, res: Response) => {
+app.delete("/api/trainers/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log("Deleting trainer with ID:", id);
   try {
@@ -614,7 +685,12 @@ app.delete('/api/trainers/:id', async (req: Request, res: Response) => {
     res.json({ message: "Trainer deleted successfully" });
   } catch (error) {
     console.error("Error deleting trainer:", error);
-    res.status(500).json({ message: 'Failed to delete trainer', error: (error as Error).message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to delete trainer",
+        error: (error as Error).message,
+      });
   }
 });
 

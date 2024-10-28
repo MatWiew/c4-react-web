@@ -73,15 +73,14 @@ const InteractiveChessboard: React.FC = () => {
   };
 
   return (
-    <div className="relative cursor-pointer z-50">
-      <div className="relative z-10">
+    <div className="relative cursor-pointer z-5">
+      <div className="relative">
         <Chessboard
           id="StyledBoard"
           position={game.fen()}
           customBoardStyle={{
             borderRadius: "4px",
             boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-            zIndex: 1,
           }}
           customArrowColor="rgb(0,0,0)"
           customLightSquareStyle={{
