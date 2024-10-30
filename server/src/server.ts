@@ -9,9 +9,18 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
+// Constants
+const MAX_DB_SIZE_MB = 500;
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const mongoURI = process.env.MONGODB_URI as string;
+
+async function checkDatabaseSize() {
+  const stats = await mongoose.connection.db.stats();
+  const dataSizeMB = stats.dataSize / (1024 * 1024); // Convert bytes to megabytes
+  return dataSizeMB;
+}
 
 // Middleware
 app.use(cors());
@@ -268,12 +277,10 @@ app.get("/api/sponsors", async (req: Request, res: Response) => {
     res.json(sponsors); // Send sponsors as JSON response
   } catch (error) {
     console.error("Error fetching sponsors:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to fetch sponsors",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to fetch sponsors",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -288,6 +295,16 @@ app.post("/api/sponsors", async (req: Request, res: Response) => {
   }
 
   try {
+    const dbSizeMB = await checkDatabaseSize();
+
+    // Check if adding the new sponsor exceeds the size limit
+    if (dbSizeMB >= MAX_DB_SIZE_MB) {
+      // Find and delete the oldest article
+      const oldestArticle = await Article.findOne().sort({ created_at: 1 });
+      if (oldestArticle) {
+        await Article.findByIdAndDelete(oldestArticle._id);
+      }
+    }
     const newSponsor = new Sponsor({ name, image_url });
     await newSponsor.save();
     res
@@ -295,12 +312,10 @@ app.post("/api/sponsors", async (req: Request, res: Response) => {
       .json({ message: "Sponsor added successfully", sponsor: newSponsor });
   } catch (error) {
     console.error("Error adding sponsor:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to add sponsor",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to add sponsor",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -318,12 +333,10 @@ app.delete("/api/sponsors/:id", async (req: Request, res: Response) => {
     res.json({ message: "Sponsor deleted successfully" });
   } catch (error) {
     console.error("Error deleting sponsor:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to delete sponsor",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to delete sponsor",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -343,6 +356,16 @@ app.post("/api/articles", async (req: Request, res: Response) => {
   const { title, content, image_url, isSecond } = req.body;
 
   try {
+    const dbSizeMB = await checkDatabaseSize();
+
+    // Check if adding the new article exceeds the size limit
+    if (dbSizeMB >= MAX_DB_SIZE_MB) {
+      // Find and delete the oldest article
+      const oldestArticle = await Article.findOne().sort({ created_at: 1 });
+      if (oldestArticle) {
+        await Article.findByIdAndDelete(oldestArticle._id);
+      }
+    }
     const newArticle = new Article({
       title,
       content,
@@ -429,6 +452,16 @@ app.post("/api/tournaments", async (req: Request, res: Response) => {
   const { name, date, type, round_number, place, page, icon } = req.body;
 
   try {
+    const dbSizeMB = await checkDatabaseSize();
+
+    // Check if adding the new tournament exceeds the size limit
+    if (dbSizeMB >= MAX_DB_SIZE_MB) {
+      // Find and delete the oldest article
+      const oldestArticle = await Article.findOne().sort({ created_at: 1 });
+      if (oldestArticle) {
+        await Article.findByIdAndDelete(oldestArticle._id);
+      }
+    }
     // Check if a tournament already exists for the specified date
     const existingTournament = await Tournament.findOne({
       date: new Date(date),
@@ -533,6 +566,16 @@ app.post("/api/topplayers", async (req: Request, res: Response) => {
   }
 
   try {
+    const dbSizeMB = await checkDatabaseSize();
+
+    // Check if adding the new player exceeds the size limit
+    if (dbSizeMB >= MAX_DB_SIZE_MB) {
+      // Find and delete the oldest article
+      const oldestArticle = await Article.findOne().sort({ created_at: 1 });
+      if (oldestArticle) {
+        await Article.findByIdAndDelete(oldestArticle._id);
+      }
+    }
     const newPlayer = new TopPlayers({ fullname, rating });
     await newPlayer.save();
     res
@@ -540,12 +583,10 @@ app.post("/api/topplayers", async (req: Request, res: Response) => {
       .json({ message: "Top player added successfully", player: newPlayer });
   } catch (error) {
     console.error("Error adding top player:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to add top player",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to add top player",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -573,12 +614,10 @@ app.put("/api/topplayers/:id", async (req: Request, res: Response) => {
     res.json({ message: "Player updated successfully", player: updatedPlayer });
   } catch (error) {
     console.error("Error updating player:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to update player",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to update player",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -596,12 +635,10 @@ app.delete("/api/topplayers/:id", async (req: Request, res: Response) => {
     res.json({ message: "Player deleted successfully" });
   } catch (error) {
     console.error("Error deleting player:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to delete player",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to delete player",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -624,6 +661,16 @@ app.post("/api/trainers", async (req: Request, res: Response) => {
   }
 
   try {
+    const dbSizeMB = await checkDatabaseSize();
+
+    // Check if adding the new trainer exceeds the size limit
+    if (dbSizeMB >= MAX_DB_SIZE_MB) {
+      // Find and delete the oldest article
+      const oldestArticle = await Article.findOne().sort({ created_at: 1 });
+      if (oldestArticle) {
+        await Article.findByIdAndDelete(oldestArticle._id);
+      }
+    }
     const newTrainer = new Trainers({ fullname });
     await newTrainer.save();
     res
@@ -631,12 +678,10 @@ app.post("/api/trainers", async (req: Request, res: Response) => {
       .json({ message: "Trainer added successfully", trainer: newTrainer });
   } catch (error) {
     console.error("Error adding trainer:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to add trainer",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to add trainer",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -665,12 +710,10 @@ app.put("/api/trainers/:id", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error updating trainer:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to update trainer",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to update trainer",
+      error: (error as Error).message,
+    });
   }
 });
 
@@ -685,12 +728,10 @@ app.delete("/api/trainers/:id", async (req: Request, res: Response) => {
     res.json({ message: "Trainer deleted successfully" });
   } catch (error) {
     console.error("Error deleting trainer:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to delete trainer",
-        error: (error as Error).message,
-      });
+    res.status(500).json({
+      message: "Failed to delete trainer",
+      error: (error as Error).message,
+    });
   }
 });
 

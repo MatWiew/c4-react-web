@@ -101,8 +101,6 @@ const NewsPanel = () => {
     };
 
     try {
-      console.log("Submitting article data:", articleData); // Log article data
-
       // If "Ustaw artykuł jako najnowszy" is checked
       if (isLatest && selectedArticle) {
         // Delete the existing article
@@ -331,21 +329,21 @@ const NewsPanel = () => {
           </button>
           {selectedArticle && (
             <>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="bg-red-500 text-white rounded p-2 mt-2"
-            >
-              Usuń artykuł
-            </button>
-            <button
-            type="button"
-            onClick={() => setSelectedArticle(null)}
-            className="bg-gray-500 text-white rounded p-2 mt-2"
-          >
-            Utwórz nowy
-          </button>
-          </>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="bg-red-500 text-white rounded p-2 mt-2"
+              >
+                Usuń artykuł
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedArticle(null)}
+                className="bg-gray-500 text-white rounded p-2 mt-2"
+              >
+                Utwórz nowy
+              </button>
+            </>
           )}
         </form>
       </div>
