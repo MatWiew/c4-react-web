@@ -8,8 +8,9 @@ import SponsorPanel from "./AdminPanel/SponsorPanel";
 
 const Admin: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>(30 * 60); // 30 minutes in seconds
 
-  const sessionDuration = 15 * 60; // 15 minutes
+  const sessionDuration = 30 * 60;
 
   useEffect(() => {
     const savedLoginState = localStorage.getItem("isLoggedIn");
@@ -19,13 +20,20 @@ const Admin: React.FC = () => {
 
     const handleActivity = () => {
       localStorage.setItem("lastActivity", Date.now().toString());
+      setCountdown(sessionDuration); // Reset countdown on activity
     };
 
     const checkInactivity = () => {
       const lastActivity = localStorage.getItem("lastActivity");
       if (lastActivity) {
         const elapsed = Date.now() - Number(lastActivity);
-        if (elapsed > sessionDuration) {
+        const remainingTime = Math.max(
+          sessionDuration - Math.floor(elapsed / 1000),
+          0
+        );
+        setCountdown(remainingTime);
+
+        if (remainingTime <= 0) {
           setIsLoggedIn(false);
           localStorage.removeItem("lastActivity");
           localStorage.setItem("isLoggedIn", "false"); // Update login state
@@ -36,11 +44,9 @@ const Admin: React.FC = () => {
     if (isLoggedIn) {
       localStorage.setItem("lastActivity", Date.now().toString());
       localStorage.setItem("isLoggedIn", "true"); // Update login state
-      const intervalId = setInterval(checkInactivity, 1000 * 60);
-
-      window.addEventListener("mousemove", handleActivity);
+      const intervalId = setInterval(checkInactivity, 1000);
       window.addEventListener("keydown", handleActivity);
-
+      window.addEventListener("mousedown", handleActivity);
       return () => {
         clearInterval(intervalId);
         window.removeEventListener("mousemove", handleActivity);
@@ -51,6 +57,23 @@ const Admin: React.FC = () => {
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
+    setCountdown(sessionDuration); // Start countdown on login
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCountdown(sessionDuration); // Reset countdown
+    localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem("lastActivity");
+  };
+
+  // Format countdown as MM:SS
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   return (
@@ -64,16 +87,15 @@ const Admin: React.FC = () => {
             <TournamentsPanel />
             <ClubPanel />
             <SponsorPanel />
-            <button
-              className="fixed rounded-lg right-5 top-5 bg-red-600 text-white p-1"
-              onClick={() => {
-                setIsLoggedIn(false);
-                localStorage.setItem("isLoggedIn", "false");
-                localStorage.removeItem("lastActivity");
-              }}
-            >
-              Wyloguj się
-            </button>
+            <div className="fixed right-5 top-5 flex items-center space-x-2">
+              <span>{formatTime(countdown)}</span>
+              <button
+                className="rounded-lg bg-red-600 text-white p-1"
+                onClick={handleLogout}
+              >
+                Wyloguj się
+              </button>
+            </div>
           </>
         )}
       </div>

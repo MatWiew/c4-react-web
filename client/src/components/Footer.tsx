@@ -45,7 +45,7 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>((props, ref) => {
       <div className="relative lg:top-[3200px] md:top-[2200px] top-[2200px]">
         <motion.div
           ref={refFirst}
-          className="mx-[15vw]"
+          className="w-full"
           initial={{ opacity: 0, bottom: -50 }}
           animate={{
             opacity: isVisibleFirst ? 1 : 0,

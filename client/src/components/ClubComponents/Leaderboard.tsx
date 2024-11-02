@@ -51,11 +51,12 @@ const Leaderboard: React.FC = () => {
   // Dynamically slice the leaderboard based on screen size
   const displayedData = isSmallScreen
     ? leaderboardData.slice(0, 3)
-    : leaderboardData;
+    : leaderboardData.slice(0, 5);
 
-  // Fill remaining spots with "-------"
+  // Fill remaining spots based on screen size
+  const maxEntries = isSmallScreen ? 3 : 5;
   const filledData = [...displayedData];
-  const remainingSlots = 5 - filledData.length;
+  const remainingSlots = maxEntries - filledData.length;
   for (let i = 0; i < remainingSlots; i++) {
     filledData.push({
       rank: filledData.length + 1,
