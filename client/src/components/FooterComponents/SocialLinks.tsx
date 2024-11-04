@@ -24,7 +24,7 @@ const socialLinks: SocialLinkProps[] = [
     name: "Youtube",
     iconSrc:
       "https://cdn.builder.io/api/v1/image/assets/TEMP/fdce96ad0c83b2525b18f0bbe54823998b3b625a140dfbd5042ff833d86fddc0?placeholderIfAbsent=true&apiKey=3d4b1e2fe5494ed690d3adef16496114",
-    href: "https://www.youtube.com/watch?v=tsqUMo6tUso",
+    href: "#",
   },
 ];
 

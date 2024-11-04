@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const navigationItems = [
-  { name: "Statut klubu", url: "/statut" },
+  { name: "Statut klubu", url: "#" },
   { name: "Polityka prywatności", url: "/privacy-policy.pdf" },
   {
     name: "Mateusz Wiewióra",
