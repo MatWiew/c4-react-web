@@ -142,7 +142,9 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
           <div className="flex px-3 h-full text-center min-w-[300px] max-w-[550px]">
             {selectedEvent ? (
               <div className="mx-auto my-auto h-5/6">
-                <p className="text-xl font-bold mb-4 max-[767px]:mt-5">{selectedEvent.name}</p>
+                <p className="text-xl font-bold mb-4 max-[767px]:mt-5">
+                  {selectedEvent.name}
+                </p>
                 <p className="italic text-base mt-8">
                   <span className="text-white font-bold">Liczba rund:</span>{" "}
                   <span className="text-gray-200">
@@ -182,19 +184,37 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                 </motion.a>
               </div>
             ) : (
-              <p className="flex-grow w-full my-auto text-lg">
+              <p className="flex-grow w-full my-auto text-lg max-[767px]:mt-[80px]">
                 <h1 className="relative text-xl top-[-40px]">
                   Przeglądaj kalendarz w poszukiwaniu turniejów.
                 </h1>
                 <div className="">
                   <p className="relative">Szukaj naszych figur szachowych:</p>
                   <div className="flex justify-center mt-2 w-[208px]">
-                    <Pawn size={30} className="absolute min-[482px]:left-[200px] left-[42vw]" />
-                    <Bishop size={30} className="absolute min-[482px]:left-[170px] left-[36vw]" />
-                    <Knight size={30} className="absolute min-[482px]:left-[140px] left-[30vw]" />
-                    <Queen size={30} className="absolute min-[482px]:left-[235px] left-[49vw]" />
-                    <King size={30} className="absolute min-[482px]:left-[260px] left-[54vw]" />
-                    <Rook size={30} className="absolute min-[482px]:left-[290px] left-[60vw]" />
+                    <Pawn
+                      size={30}
+                      className="absolute min-[482px]:left-[200px] left-[42vw]"
+                    />
+                    <Bishop
+                      size={30}
+                      className="absolute min-[482px]:left-[170px] left-[36vw]"
+                    />
+                    <Knight
+                      size={30}
+                      className="absolute min-[482px]:left-[140px] left-[30vw]"
+                    />
+                    <Queen
+                      size={30}
+                      className="absolute min-[482px]:left-[235px] left-[49vw]"
+                    />
+                    <King
+                      size={30}
+                      className="absolute min-[482px]:left-[260px] left-[54vw]"
+                    />
+                    <Rook
+                      size={30}
+                      className="absolute min-[482px]:left-[290px] left-[60vw]"
+                    />
                   </div>
                   <p className="mt-9">
                     A następnie kliknij na dzień oznaczony figurą aby dowiedzieć
