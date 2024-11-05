@@ -764,18 +764,5 @@ if (process.env.NODE_ENV === "production") {
 
 // Start server
 app.listen(PORT, () => {
-  const networkInterfaces = os.networkInterfaces();
-  let localAddress: string = 'localhost';
-
-  // Loop through network interfaces to find the first non-internal IPv4 address
-  for (const iface of Object.values(networkInterfaces)) {
-    for (const details of iface!) {
-      if (details.family === 'IPv4' && !details.internal) {
-        localAddress = details.address;
-        break;
-      }
-    }
-  }
-
-  console.log(`Server is running on http://${localAddress}:${PORT}`);
+  console.log(`Server is running on http://0.0.0.0:${PORT}`);
 });
