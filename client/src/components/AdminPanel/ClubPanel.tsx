@@ -44,8 +44,8 @@ const ClubPanel: React.FC = () => {
     try {
       const method = editingPlayerId ? "PUT" : "POST";
       const url = editingPlayerId
-        ? `http://localhost:5000/api/topplayers/${editingPlayerId}`
-        : "http://localhost:5000/api/topplayers";
+        ? `${process.env.REACT_APP_API_URL}/topplayers/${editingPlayerId}`
+        : `${process.env.REACT_APP_API_URL}/topplayers`;
 
       const response = await fetch(url, {
         method,
@@ -94,8 +94,8 @@ const ClubPanel: React.FC = () => {
     try {
       const method = editingTrainerId ? "PUT" : "POST";
       const url = editingTrainerId
-        ? `http://localhost:5000/api/trainers/${editingTrainerId}`
-        : "http://localhost:5000/api/trainers";
+        ? `${process.env.REACT_APP_API_URL}/trainers/${editingTrainerId}`
+        : `${process.env.REACT_APP_API_URL}/trainers`;
 
       const response = await fetch(url, {
         method,
@@ -136,7 +136,7 @@ const ClubPanel: React.FC = () => {
     if (window.confirm("Jesteś pewien że chcesz usunąć tego instruktora?")) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/trainers/${id}`,
+          `${process.env.REACT_APP_API_URL}/trainers/${id}`,
           { method: "DELETE" }
         );
         if (!response.ok) {
@@ -153,7 +153,7 @@ const ClubPanel: React.FC = () => {
 
   const fetchInstructors = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/trainers");
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/trainers`);
       if (!response.ok) {
         throw new Error("Failed to fetch instructors");
       }
