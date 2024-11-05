@@ -30,7 +30,9 @@ const CalendarC: React.FC<{
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/tournaments");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/tournaments`
+        );
         const data: Event[] = await response.json();
 
         const convertedEvents = data.map((event) => ({

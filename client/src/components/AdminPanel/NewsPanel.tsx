@@ -19,7 +19,9 @@ const NewsPanel = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/articles");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/articles`
+        );
         if (!response.ok) throw new Error("Error fetching articles");
         const data = await response.json();
 
@@ -105,7 +107,7 @@ const NewsPanel = () => {
       if (isLatest && selectedArticle) {
         // Delete the existing article
         const deleteResponse = await fetch(
-          `http://localhost:5000/api/articles/${selectedArticle._id}`,
+          `${process.env.REACT_APP_API_URL}/articles/${selectedArticle._id}`,
           {
             method: "DELETE",
           }
@@ -116,13 +118,16 @@ const NewsPanel = () => {
         }
 
         // Create a new article
-        const response = await fetch("http://localhost:5000/api/articles", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(articleData),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/articles`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(articleData),
+          }
+        );
 
         if (!response.ok) {
           const errorResponse = await response.json();
@@ -147,7 +152,7 @@ const NewsPanel = () => {
         // Update the article normally
         const response = selectedArticle
           ? await fetch(
-              `http://localhost:5000/api/articles/${selectedArticle._id}`,
+              `${process.env.REACT_APP_API_URL}/articles/${selectedArticle._id}`,
               {
                 method: "PUT",
                 headers: {
@@ -156,7 +161,7 @@ const NewsPanel = () => {
                 body: JSON.stringify(articleData),
               }
             )
-          : await fetch("http://localhost:5000/api/articles", {
+          : await fetch(`${process.env.REACT_APP_API_URL}/articles`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -218,7 +223,7 @@ const NewsPanel = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/articles/${selectedArticle._id}`,
+        `${process.env.REACT_APP_API_URL}/articles/${selectedArticle._id}`,
         {
           method: "DELETE",
         }

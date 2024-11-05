@@ -76,7 +76,9 @@ const Club = forwardRef<HTMLDivElement>((props, ref) => {
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/trainers");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/trainers`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch instructors");
         }

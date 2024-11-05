@@ -19,7 +19,9 @@ const SponsorSection: React.FC = () => {
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/sponsors");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/sponsors`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch sponsors");
         }

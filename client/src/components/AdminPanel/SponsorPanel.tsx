@@ -21,7 +21,7 @@ const SponsorPanel: React.FC = () => {
 
   const fetchSponsors = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/sponsors");
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/sponsors`);
       if (!response.ok) throw new Error("Failed to fetch sponsors");
       const data = await response.json();
       setSponsors(data);
@@ -51,11 +51,14 @@ const SponsorPanel: React.FC = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/sponsors", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sponsorData),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/sponsors`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sponsorData),
+        }
+      );
 
       // Handle non-2xx responses
       if (!response.ok) {
@@ -88,7 +91,7 @@ const SponsorPanel: React.FC = () => {
     if (window.confirm("Are you sure you want to delete this sponsor?")) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/sponsors/${id}`,
+          `${process.env.REACT_APP_API_URL}/sponsors/${id}`,
           {
             method: "DELETE",
           }

@@ -36,7 +36,7 @@ const LeaderboardA: React.FC<LeaderboardProps> = ({
         );
 
         const response = await fetch(
-          `http://localhost:5000/api/topplayers/${_id}`,
+          `${process.env.REACT_APP_API_URL}/topplayers/${_id}`,
           {
             method: "DELETE",
           }

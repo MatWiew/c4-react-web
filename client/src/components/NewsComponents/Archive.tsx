@@ -10,7 +10,9 @@ const Archive: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/articles");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/articles`
+        );
         const data = await response.json();
 
         // Sort articles by created_at date (newest first)

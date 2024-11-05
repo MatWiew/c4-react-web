@@ -6,6 +6,7 @@ import path from "path";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import os from 'os';
 
 dotenv.config();
 
@@ -13,18 +14,30 @@ dotenv.config();
 const MAX_DB_SIZE_MB = 500;
 
 const app = express();
+
+// CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_API_URL,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
 const PORT = process.env.PORT || 5000;
 const mongoURI = process.env.MONGODB_URI as string;
+
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 async function checkDatabaseSize() {
   const stats = await mongoose.connection.db.stats();
   const dataSizeMB = stats.dataSize / (1024 * 1024); // Convert bytes to megabytes
   return dataSizeMB;
 }
-
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
 
 // MongoDB Connection
 mongoose
@@ -144,6 +157,11 @@ const Trainers = mongoose.model<ITrainers>(
   TrainersSchema,
   "Trainers"
 );
+
+//test
+app.get("/api/test", (req: Request, res: Response) => {
+  res.json({ message: "Test API is working!" });
+});
 
 // Email sending endpoint
 app.post("/api/send-email", async (req: Request, res: Response) => {
@@ -746,5 +764,18 @@ if (process.env.NODE_ENV === "production") {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  const networkInterfaces = os.networkInterfaces();
+  let localAddress: string = 'localhost';
+
+  // Loop through network interfaces to find the first non-internal IPv4 address
+  for (const iface of Object.values(networkInterfaces)) {
+    for (const details of iface!) {
+      if (details.family === 'IPv4' && !details.internal) {
+        localAddress = details.address;
+        break;
+      }
+    }
+  }
+
+  console.log(`Server is running on http://${localAddress}:${PORT}`);
 });

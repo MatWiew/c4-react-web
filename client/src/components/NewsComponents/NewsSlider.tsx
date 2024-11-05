@@ -28,7 +28,9 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ onClick }) => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/articles");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/articles`
+        );
         const data: Article[] = await response.json();
 
         const secondArticle = data.find((article) => article.isSecond);

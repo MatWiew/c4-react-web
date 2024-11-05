@@ -48,7 +48,9 @@ const TournamentsPanel: React.FC = () => {
 
   const fetchTournaments = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/tournaments");
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/tournament`
+      );
       if (!response.ok) throw new Error("Failed to fetch tournaments");
       const data: Event[] = await response.json();
       const convertedEvents = data.map((event) => ({
@@ -97,7 +99,7 @@ const TournamentsPanel: React.FC = () => {
       const dateString = utcDate.toISOString().split("T")[0];
 
       const existingResponse = await fetch(
-        `http://localhost:5000/api/tournaments?date=${dateString}`
+        `${process.env.REACT_APP_API_URL}/tournament?date=${dateString}`
       );
       if (!existingResponse.ok) {
         setError("Nie udało się pobrać istniejących turniejów");
@@ -139,7 +141,7 @@ const TournamentsPanel: React.FC = () => {
     try {
       if (tournamentData._id) {
         const updateResponse = await fetch(
-          `http://localhost:5000/api/tournaments/${tournamentData._id}`,
+          `${process.env.REACT_APP_API_URL}/tournament/${tournamentData._id}`,
           {
             method: "PUT",
             headers: {
@@ -155,7 +157,7 @@ const TournamentsPanel: React.FC = () => {
         alert("Turniej zaktualizowany pomyślnie!");
       } else {
         const postResponse = await fetch(
-          "http://localhost:5000/api/tournaments",
+          `${process.env.REACT_APP_API_URL}/tournament`,
           {
             method: "POST",
             headers: {
@@ -198,7 +200,7 @@ const TournamentsPanel: React.FC = () => {
 
       try {
         const deleteResponse = await fetch(
-          `http://localhost:5000/api/tournaments/${selectedEvent._id}`,
+          `${process.env.REACT_APP_API_URL}/tournament/${selectedEvent._id}`,
           {
             method: "DELETE",
           }
