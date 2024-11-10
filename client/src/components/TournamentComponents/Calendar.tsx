@@ -2,12 +2,12 @@ import React, { useEffect, useState, useCallback } from "react";
 import Calendar from "rsuite/Calendar";
 import "rsuite/dist/rsuite.min.css";
 import "./Calendar.css";
-import Pawn from "../../assets/Pawn";
-import Bishop from "../../assets/Bishop";
-import Knight from "../../assets/Knight";
-import Queen from "../../assets/Queen";
-import King from "../../assets/King";
-import Rook from "../../assets/Rook";
+import Pawn from "../../assets/TournamentAssets/Pawn";
+import Bishop from "../../assets/TournamentAssets/Bishop";
+import Knight from "../../assets/TournamentAssets/Knight";
+import Queen from "../../assets/TournamentAssets/Queen";
+import King from "../../assets/TournamentAssets/King";
+import Rook from "../../assets/TournamentAssets/Rook";
 import CustomCalendarHeader from "./CustomCalendarHeader";
 import CustomMonthHeader from "./CustomMonthHeader";
 
@@ -77,37 +77,76 @@ const CalendarC: React.FC<{
         <div className="absolute w-12 h-5">
           {list.map((event, index) => {
             let IconComponent;
+            let iconSize;
+            let colorClass;
 
-            // Map the icon string to the corresponding component
+            // Map the icon string to the corresponding component and color
             switch (event.icon) {
               case "pawn":
                 IconComponent = Pawn;
+                iconSize = 38;
+                colorClass = "bg-orange-500";
                 break;
               case "bishop":
                 IconComponent = Bishop;
+                iconSize = 57;
+                colorClass = "bg-lime-500";
                 break;
               case "knight":
                 IconComponent = Knight;
+                iconSize = 57;
+                colorClass = "bg-teal-500";
                 break;
               case "queen":
                 IconComponent = Queen;
+                iconSize = 65;
+                colorClass = "bg-blue-500";
                 break;
               case "king":
                 IconComponent = King;
+                iconSize = 65;
+                colorClass = "bg-violet-500";
                 break;
               case "rook":
                 IconComponent = Rook;
+                iconSize = 58;
+                colorClass = "bg-yellow-400";
                 break;
               default:
                 return null;
             }
 
             return (
-              <IconComponent
+              <div
+                className={`rounded-[100%] p-1 absolute right-0 transform translate-x-[25px] ${
+                  event.icon === "pawn"
+                    ? "-translate-y-[22px]"
+                    : event.icon === "queen" || event.icon === "king"
+                    ? "-translate-y-[31px]"
+                    : "-translate-y-[27px]"
+                }`}
                 key={index}
-                size={18}
-                className="absolute right-0 transform translate-x-1/2 -translate-y-1/2 z-10"
-              />
+              >
+                <IconComponent
+                  size={iconSize}
+                  className={`z-50 absolute ${
+                    event.icon === "bishop"
+                      ? "ml-1.5"
+                      : event.icon === "knight"
+                      ? "ml-2"
+                      : "ml-3"
+                  }`}
+                />
+                <div
+                  className={`${colorClass} rounded-full h-10 w-10 right-0 transform -translate-x-[25px] z-10 relative ${
+                    event.icon === "pawn"
+                      ? "translate-y-[10px]"
+                      : event.icon === "queen" || event.icon === "king"
+                      ? "translate-y-[19px]"
+                      : "translate-y-[15px]"
+                  }`}
+                ></div>
+              </div>
             );
           })}
         </div>

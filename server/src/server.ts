@@ -6,7 +6,7 @@ import path from "path";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import os from 'os';
+import os from "os";
 
 dotenv.config();
 
@@ -18,9 +18,9 @@ const app = express();
 // CORS configuration
 const corsOptions = {
   origin: process.env.FRONTEND_API_URL,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
@@ -31,7 +31,6 @@ const mongoURI = process.env.MONGODB_URI as string;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 async function checkDatabaseSize() {
   const stats = await mongoose.connection.db.stats();

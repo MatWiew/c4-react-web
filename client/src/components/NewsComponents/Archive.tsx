@@ -6,7 +6,7 @@ const Archive: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [articles, setArticles] = useState<any[]>([]); // Use appropriate type for articles
   const [loading, setLoading] = useState(true); // State for loading
   const [selectedArticle, setSelectedArticle] = useState<any>(null); // State for selected article
-
+  const [showArchive, setShowArchive] = useState(true);
   useEffect(() => {
     const fetchArticles = async () => {
       try {
@@ -33,8 +33,26 @@ const Archive: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     fetchArticles();
   }, []);
 
+  useEffect(() => {
+    // Prevent scrolling on the body when archive is open
+    if (showArchive) {
+      document.body.style.overflow = "hidden"; // Disable scroll
+    } else {
+      document.body.style.overflow = ""; // Re-enable scroll when modal is closed
+    }
+
+    // Cleanup on unmount or when selectedArticle changes
+    return () => {
+      document.body.style.overflow = ""; // Re-enable scroll
+    };
+  }, [selectedArticle]);
+
   const handleArticleClick = (article: any) => {
     setSelectedArticle(article); // Set the selected article
+  };
+
+  const handleClose = () => {
+    setSelectedArticle(null);
   };
 
   return (
@@ -94,7 +112,7 @@ const Archive: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       {selectedArticle && (
         <FullscreenArticleModal
           article={selectedArticle}
-          onClose={() => setSelectedArticle(null)} // Close handler for modal
+          onClose={handleClose} // Close handler for modal
         />
       )}
     </motion.div>

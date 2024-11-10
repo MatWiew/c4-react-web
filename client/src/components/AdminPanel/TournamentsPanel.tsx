@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CalendarC from "../TournamentComponents/CalendarA";
-import Pawn from "../../assets/Pawn";
-import Bishop from "../../assets/Bishop";
-import Knight from "../../assets/Knight";
-import Queen from "../../assets/Queen";
-import King from "../../assets/King";
-import Rook from "../../assets/Rook";
+import Pawn from "../../assets/TournamentAssets/Pawn";
+import Bishop from "../../assets/TournamentAssets/Bishop";
+import Knight from "../../assets/TournamentAssets/Knight";
+import Queen from "../../assets/TournamentAssets/Queen";
+import King from "../../assets/TournamentAssets/King";
+import Rook from "../../assets/TournamentAssets/Rook";
 
 interface Event {
   _id?: string;
@@ -64,6 +64,7 @@ const TournamentsPanel: React.FC = () => {
   };
 
   const handleDateChange = (date: Date, events: Event[]) => {
+    date.setHours(10, 0, 0, 0);
     if (events.length > 0) {
       const event = events[0]; // Use the first event directly
       setSelectedEvent(event);
@@ -77,7 +78,7 @@ const TournamentsPanel: React.FC = () => {
     } else {
       setSelectedEvent(null);
       setName("");
-      setDate(null);
+      setDate(date);
       setType("blitz");
       setRoundNumber(0);
       setPlace("");
@@ -327,7 +328,7 @@ const TournamentsPanel: React.FC = () => {
           <div>
             <label className="block mb-1 text-white">Ikona turnieju:</label>
             {/* Icon buttons */}
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap space-x-4 w-full">
               {Object.entries(iconComponents).map(([key, IconComponent]) => (
                 <div
                   key={key}
@@ -358,7 +359,7 @@ const TournamentsPanel: React.FC = () => {
                     transition: "background-color 0.2s",
                   }}
                 >
-                  <IconComponent size={30} className="w-full h-[30px]" />
+                  <IconComponent size={100} className="w-full h-[50px] transform translate-x-[6px] translate-y-[10px]" />
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface FullscreenArticleModalProps {
@@ -14,6 +14,16 @@ const FullscreenArticleModal: React.FC<FullscreenArticleModalProps> = ({
   article,
   onClose,
 }) => {
+  // Disable scroll on body when the modal is open
+  useEffect(() => {
+    // Prevent scrolling on the body when modal is open
+    document.body.style.overflow = "hidden";
+
+    // Cleanup: restore body scroll behavior when modal is closed
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
   return (
     <motion.div
       className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"

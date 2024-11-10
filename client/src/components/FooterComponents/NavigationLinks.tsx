@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const navigationItems = [
-  { name: "Statut klubu", url: "#" },
+  { name: "Statut klubu", url: "/statut.pdf" },
   { name: "Polityka prywatności", url: "/privacy-policy.pdf" },
   {
     name: "Mateusz Wiewióra",
@@ -12,7 +12,7 @@ const navigationItems = [
 
 const NavigationLinks: React.FC = () => {
   return (
-    <ul className="flex flex-col justify-center gap-12 py-2 max-md:py-7 text-2xl text-white h-[285px] max-md:ml-[15vw] mr-12 max-md:text-center">
+    <ul className="flex flex-col justify-center gap-11 py-2 pt-6 max-md:pt-12 max-md:py-7 text-2xl text-white h-[285px] max-md:ml-[15vw] mr-16 max-md:text-center">
       {navigationItems.map((item, index) => (
         <li key={index}>
           <motion.a

@@ -11,11 +11,23 @@ const Admin: React.FC = () => {
   const [countdown, setCountdown] = useState<number>(30 * 60); // 30 minutes in seconds
 
   const sessionDuration = 30 * 60;
+  const inactivityTimeout = 5000; // 5 seconds
 
   useEffect(() => {
     const savedLoginState = localStorage.getItem("isLoggedIn");
+    const lastClosedTimestamp = localStorage.getItem("lastClosedTimestamp");
+
     if (savedLoginState === "true") {
-      setIsLoggedIn(true);
+      // Check if the page was closed for more than 5 seconds
+      const now = Date.now();
+      if (
+        lastClosedTimestamp &&
+        now - Number(lastClosedTimestamp) > inactivityTimeout
+      ) {
+        handleLogout();
+      } else {
+        setIsLoggedIn(true);
+      }
     }
 
     const handleActivity = () => {
@@ -34,12 +46,16 @@ const Admin: React.FC = () => {
         setCountdown(remainingTime);
 
         if (remainingTime <= 0) {
-          setIsLoggedIn(false);
-          localStorage.removeItem("lastActivity");
-          localStorage.setItem("isLoggedIn", "false"); // Update login state
+          handleLogout();
         }
       }
     };
+
+    const handleUnload = () => {
+      localStorage.setItem("lastClosedTimestamp", Date.now().toString());
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
 
     if (isLoggedIn) {
       localStorage.setItem("lastActivity", Date.now().toString());
@@ -47,12 +63,17 @@ const Admin: React.FC = () => {
       const intervalId = setInterval(checkInactivity, 1000);
       window.addEventListener("keydown", handleActivity);
       window.addEventListener("mousedown", handleActivity);
+
       return () => {
         clearInterval(intervalId);
-        window.removeEventListener("mousemove", handleActivity);
         window.removeEventListener("keydown", handleActivity);
+        window.removeEventListener("mousedown", handleActivity);
       };
     }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
   }, [isLoggedIn, sessionDuration]);
 
   const handleLoginSuccess = () => {
@@ -65,6 +86,7 @@ const Admin: React.FC = () => {
     setCountdown(sessionDuration); // Reset countdown
     localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("lastActivity");
+    localStorage.removeItem("lastClosedTimestamp");
   };
 
   // Format countdown as MM:SS

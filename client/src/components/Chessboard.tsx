@@ -103,8 +103,24 @@ const InteractiveChessboard: React.FC = () => {
         onClick={handleBoardClick}
       ></div>
 
-      <div className="self-center lg:mt-6 mt-3 text-center">
-        {game.turn() === "w" ? "Ruch białych" : "Ruch czarnych"}
+      <div className="self-center lg:mt-5 mt-3 text-center">
+        <div className="max-lg:hidden">
+          {game.turn() === "w" ? (
+            <>
+              <span className="font-bold text-black bg-white p-1 px-2 rounded-lg leading-tight">Ruch białych</span>
+            </>
+          ) : (
+            <>
+              <span className="font-semibold text-white bg-black p-1 px-2 rounded-lg leading-tight">Ruch czarnych</span>
+            </>
+          )}
+        </div>
+        <div className="text-center lg:hidden mt-3">
+          <span className="bg-white text-black font-bold rounded-lg p-1">
+            Kliknij
+          </span>{" "}
+          aby rozwiązać
+        </div>
       </div>
     </div>
   );

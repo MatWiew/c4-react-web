@@ -31,6 +31,7 @@
   width: 20px;
   height: 20px;
   font-size: 0.5rem;
+  z-index: 5;
   margin-left: auto !important;
   margin-right: auto !important;
   text-align: center !important;

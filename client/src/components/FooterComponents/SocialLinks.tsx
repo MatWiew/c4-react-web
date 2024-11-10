@@ -35,7 +35,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ name, iconSrc, href }) => {
       whileHover={{ scale: 1.1, filter: "brightness(0.7)" }}
       transition={{ type: "spring", stiffness: 300 }}
       href={href}
-      className="flex xl:text-[1.3rem] text-[2vw] gap-2.5 items-center py-3 mt-5 border border-solid border-white border-opacity-30 rounded-[149px] max-md:pl-5 text-white hover:no-underline hover:text-current min-w-[120px]"
+      className="flex xl:text-[1.3rem] text-[2vw] gap-2.5 items-center p-3 mt-5 border border-solid border-white border-opacity-30 rounded-[149px] max-md:pl-5 text-white hover:no-underline hover:text-current min-w-[120px]"
     >
       <img
         loading="lazy"
@@ -50,10 +50,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ name, iconSrc, href }) => {
 
 const SocialLinks: React.FC = () => {
   return (
-    <div className="flex flex-col text-xl font-base ml-2 max-md:mr-[10vw]">
-      <p className="text-white font-normal xl:text-[1.5rem] max-md:mt-5 mt-4 text-[2vw] text-center">
-        Odwiedź nas
-      </p>
+    <div className="flex flex-col text-xl font-base ml-4 max-md:mr-[6vw] mt-7">
       <div className="flex flex-col leading-none text-white whitespace-nowrap">
         {socialLinks.map((link, index) => (
           <SocialLink key={index} {...link} />

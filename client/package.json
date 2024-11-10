@@ -17,6 +17,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "chess.ts": "^0.16.2",
+    "colorthief": "^2.6.0",
     "css-select": "^5.1.0",
     "framer-motion": "^11.2.13",
     "nth-check": "^2.1.1",

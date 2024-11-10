@@ -2,11 +2,13 @@ import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import CalendarC from "./TournamentComponents/Calendar";
 import Knight from "../assets/Knight";
+import KnightT from "../assets/TournamentAssets/Knight";
 import Pawn from "../assets/Pawn";
-import Bishop from "../assets/Bishop";
-import Queen from "../assets/Queen";
-import King from "../assets/King";
-import Rook from "../assets/Rook";
+import PawnT from "../assets/TournamentAssets/Pawn";
+import Bishop from "../assets/TournamentAssets/Bishop";
+import Queen from "../assets/TournamentAssets/Queen";
+import King from "../assets/TournamentAssets/King";
+import Rook from "../assets/TournamentAssets/Rook";
 
 interface Event {
   name: string;
@@ -30,6 +32,13 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
   // Refs for the elements to be animated
   const refFirst = useRef(null);
   const refSecond = useRef(null);
+
+  const eventTypeMap: { [key in Event['type']]: string } = {
+    blitz: "Błyskawiczne",
+    rapid: "Szybkie",
+    classical: "Klasyczne",
+    bullet: "Bullet",
+  };
 
   useEffect(() => {
     const currentRefFirst = refFirst.current;
@@ -137,7 +146,7 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
             className="absolute flex justify-center items-center rounded-[100%] w-[60px] h-[60px] top-[-30px] left-[20px]"
             style={{ backgroundColor: "#282D35" }}
           >
-            <Pawn size={30} className="" />
+            <Pawn size={30} className="" color="#00FFD1" />
           </div>
           <div className="flex px-3 h-full text-center min-w-[300px] max-w-[550px]">
             {selectedEvent ? (
@@ -152,8 +161,8 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                   </span>
                 </p>
                 <p className="italic text-base mt-5">
-                  <span className="text-white font-bold">Typ:</span>{" "}
-                  <span className="text-gray-200">{selectedEvent.type}</span>
+                  <span className="text-white font-bold">Tempo gry:</span>{" "}
+                  <span className="text-gray-200">{eventTypeMap[selectedEvent.type]}</span>
                 </p>
                 <p className="italic text-base mt-5">
                   <span className="text-white font-bold">Data:</span>{" "}
@@ -191,28 +200,28 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                 <div className="">
                   <p className="relative">Szukaj naszych figur szachowych:</p>
                   <div className="flex justify-center mt-2 w-[208px]">
-                    <Pawn
-                      size={30}
-                      className="absolute min-[482px]:left-[200px] left-[42vw]"
+                    <PawnT
+                      size={42}
+                      className="absolute min-[482px]:left-[203px] left-[42vw] md:top-[183px] top-[191px]"
                     />
                     <Bishop
-                      size={30}
+                      size={57}
                       className="absolute min-[482px]:left-[170px] left-[36vw]"
                     />
-                    <Knight
-                      size={30}
+                    <KnightT
+                      size={57}
                       className="absolute min-[482px]:left-[140px] left-[30vw]"
                     />
                     <Queen
-                      size={30}
-                      className="absolute min-[482px]:left-[235px] left-[49vw]"
+                      size={65}
+                      className="absolute min-[482px]:left-[235px] left-[49vw] md:top-[176px] top-[184px]"
                     />
                     <King
-                      size={30}
-                      className="absolute min-[482px]:left-[260px] left-[54vw]"
+                      size={65}
+                      className="absolute min-[482px]:left-[260px] left-[54vw] md:top-[176px] top-[184px]"
                     />
                     <Rook
-                      size={30}
+                      size={58}
                       className="absolute min-[482px]:left-[290px] left-[60vw]"
                     />
                   </div>

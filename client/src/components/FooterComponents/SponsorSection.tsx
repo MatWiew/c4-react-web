@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 interface SponsorData {
   src: string;
   alt: string;
+  bgColor: string;
 }
 
 const isPrime = (num: number) => {
@@ -26,10 +27,14 @@ const SponsorSection: React.FC = () => {
           throw new Error("Failed to fetch sponsors");
         }
         const data = await response.json();
-        const sponsorData = data.map(
-          (sponsor: { name: string; image_url: string }) => ({
-            src: sponsor.image_url,
-            alt: sponsor.name,
+        const sponsorData: SponsorData[] = await Promise.all(
+          data.map(async (sponsor: { name: string; image_url: string }) => {
+            const color = "#fff";
+            return {
+              src: sponsor.image_url,
+              alt: sponsor.name,
+              bgColor: color,
+            };
           })
         );
         setSponsors(sponsorData);
@@ -51,11 +56,14 @@ const SponsorSection: React.FC = () => {
     if (totalSponsors === 1) {
       return sponsors.map((sponsor, index) => (
         <div key={index} className="flex w-1/2 mx-auto flex-wrap">
-          <div className="w-full p-1 md:p-2">
+          <div
+            className="w-full m-2 max-h-[150px] p-1 md:p-2 rounded-lg"
+            style={{ backgroundColor: sponsor.bgColor }}
+          >
             <img
               alt={sponsor.alt}
               src={sponsor.src}
-              className="block h-full w-full rounded-lg object-cover object-center"
+              className="block h-full w-full rounded-lg object-contain object-center"
             />
           </div>
         </div>
@@ -64,11 +72,14 @@ const SponsorSection: React.FC = () => {
     if (totalSponsors === 2 || totalSponsors === 4) {
       return sponsors.map((sponsor, index) => (
         <div key={index} className="flex w-1/2 flex-wrap">
-          <div className="w-full p-1 md:p-2">
+          <div
+            className="w-full m-1 md:m-2 max-h-[150px] rounded-lg"
+            style={{ backgroundColor: sponsor.bgColor }}
+          >
             <img
               alt={sponsor.alt}
               src={sponsor.src}
-              className="block h-full w-full rounded-lg object-cover object-center"
+              className="block h-full w-full rounded-lg object-contain object-center"
             />
           </div>
         </div>
@@ -85,11 +96,14 @@ const SponsorSection: React.FC = () => {
               isTwoColumnLastRow ? "w-1/2" : "w-1/3"
             } flex-wrap`}
           >
-            <div className="w-full p-1 md:p-2">
+            <div
+              className="w-full m-1 md:m-2 max-h-[150px] rounded-lg"
+              style={{ backgroundColor: sponsor.bgColor }}
+            >
               <img
                 alt={sponsor.alt}
                 src={sponsor.src}
-                className="block h-full w-full rounded-lg object-cover object-center"
+                className="block h-full w-full rounded-lg object-contain object-center"
               />
             </div>
           </div>
@@ -97,15 +111,18 @@ const SponsorSection: React.FC = () => {
       });
     }
 
-    if (totalSponsors % 3 == 0)
+    if (totalSponsors % 3 === 0)
       return sponsors.map((sponsor, index) => {
         return (
           <div key={index} className="flex w-1/3 flex-wrap">
-            <div className="w-full p-1 md:p-2">
+            <div
+              className="w-full m-1 md:m-2 max-h-[150px] rounded-lg"
+              style={{ backgroundColor: sponsor.bgColor }}
+            >
               <img
                 alt={sponsor.alt}
                 src={sponsor.src}
-                className="block h-full w-full rounded-lg object-cover object-center"
+                className="block h-full w-full rounded-lg object-contain object-center"
               />
             </div>
           </div>
@@ -130,11 +147,14 @@ const SponsorSection: React.FC = () => {
             key={index}
             className={`flex ${isLastTwoRows ? "w-1/2" : "w-1/3"} flex-wrap`}
           >
-            <div className="w-full p-1 md:p-2">
+            <div
+              className="w-full m-1 md:m-2 max-h-[150px] rounded-lg"
+              style={{ backgroundColor: sponsor.bgColor }}
+            >
               <img
                 alt={sponsor.alt}
                 src={sponsor.src}
-                className="block h-full w-full rounded-lg object-cover object-center"
+                className="block h-full w-full rounded-lg object-contain object-center"
               />
             </div>
           </div>
@@ -161,11 +181,14 @@ const SponsorSection: React.FC = () => {
             key={index}
             className={`flex ${isLastTwoRows ? "w-1/2" : "w-1/3"} flex-wrap`}
           >
-            <div className="w-full p-1 md:p-2">
+            <div
+              className="w-full m-1 md:m-2 max-h-[150px] rounded-lg"
+              style={{ backgroundColor: sponsor.bgColor }}
+            >
               <img
                 alt={sponsor.alt}
                 src={sponsor.src}
-                className="block h-full w-full rounded-lg object-cover object-center"
+                className="block h-full w-full rounded-lg object-contain object-center"
               />
             </div>
           </div>
