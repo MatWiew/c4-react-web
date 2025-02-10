@@ -55,7 +55,7 @@ const LeaderboardA: React.FC<LeaderboardProps> = ({
   };
 
   return (
-    <section className="flex flex-col text-lg text-white min-w-[280px] max-w-[364px]">
+    <section className="flex flex-col text-lg max-sm:text-sm text-white min-w-[280px] max-w-[364px]">
       {leaderboardData.length === 0 ? (
         <p className="text-red-500">Brak zawodników</p>
       ) : (

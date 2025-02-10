@@ -359,7 +359,10 @@ const TournamentsPanel: React.FC = () => {
                     transition: "background-color 0.2s",
                   }}
                 >
-                  <IconComponent size={100} className="w-full h-[50px] transform translate-x-[6px] translate-y-[10px]" />
+                  <IconComponent
+                    size={100}
+                    className="w-full h-[50px] transform translate-x-[6px] translate-y-[10px]"
+                  />
                 </div>
               ))}
             </div>
@@ -378,6 +381,32 @@ const TournamentsPanel: React.FC = () => {
         )}
       </div>
       <CalendarC events={tournaments} onDateChange={handleDateChange} />
+      <p className="mt-9 px-12">
+        <span
+          style={{ color: "#facc15" }}
+          className="block mt-2 whitespace-pre"
+        >
+          <Rook
+            size={40}
+            className="absolute min-[482px]:left-[35px] left-[60vw]"
+          />{" "}
+          - Nasze turnieje
+        </span>
+        <span style={{ color: "#448efd" }} className="block whitespace-pre mt-4">
+          <Queen
+            size={55}
+            className="absolute min-[482px]:left-[35px] left-[49vw] mt-[-3px]"
+          />{" "}
+          - Rozgrywki ligowe
+        </span>
+        <span style={{ color: "#913bfe" }} className="block whitespace-pre mt-4">
+          <King
+            size={55}
+            className="absolute min-[482px]:left-[33px] left-[54vw] mt-[-3px]"
+          />{" "}
+          - Turnieje rangi mistrzowskiej
+        </span>
+      </p>
     </>
   );
 };

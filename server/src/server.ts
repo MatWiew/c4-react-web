@@ -32,7 +32,11 @@ const mongoURI = process.env.MONGODB_URI as string;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-async function checkDatabaseSize() {
+async function checkDatabaseSize(): Promise<number> {
+  if (mongoose.connection.readyState !== 1 || !mongoose.connection.db) {
+    throw new Error('Database is not connected.');
+  }
+
   const stats = await mongoose.connection.db.stats();
   const dataSizeMB = stats.dataSize / (1024 * 1024); // Convert bytes to megabytes
   return dataSizeMB;

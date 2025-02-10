@@ -193,7 +193,7 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                 </motion.a>
               </div>
             ) : (
-              <p className="flex-grow w-full my-auto text-lg max-[767px]:mt-[80px]">
+              <p className="flex-grow w-full my-auto mt-[55px] text-lg max-[767px]:mt-[80px]">
                 <h1 className="relative text-xl top-[-40px]">
                   Przeglądaj kalendarz w poszukiwaniu turniejów.
                 </h1>
@@ -202,7 +202,7 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                   <div className="flex justify-center mt-2 w-[208px]">
                     <PawnT
                       size={42}
-                      className="absolute min-[482px]:left-[203px] left-[42vw] md:top-[183px] top-[191px]"
+                      className="absolute min-[482px]:left-[203px] left-[42vw] mt-[3px]"
                     />
                     <Bishop
                       size={57}
@@ -214,11 +214,11 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                     />
                     <Queen
                       size={65}
-                      className="absolute min-[482px]:left-[235px] left-[49vw] md:top-[176px] top-[184px]"
+                      className="absolute min-[482px]:left-[235px] left-[49vw] mt-[-3px]"
                     />
                     <King
                       size={65}
-                      className="absolute min-[482px]:left-[260px] left-[54vw] md:top-[176px] top-[184px]"
+                      className="absolute min-[482px]:left-[260px] left-[54vw] mt-[-3px]"
                     />
                     <Rook
                       size={58}
@@ -226,8 +226,20 @@ const Tournaments = forwardRef<HTMLDivElement>((props, ref) => {
                     />
                   </div>
                   <p className="mt-9">
-                    A następnie kliknij na dzień oznaczony figurą aby dowiedzieć
+                     A następnie kliknij na dzień oznaczony figurą aby dowiedzieć
                     się więcej o turnieju
+                    <span style={{color:"#facc15"}} className="block mt-2 whitespace-pre"><Rook
+                      size={40}
+                      className="absolute min-[482px]:left-[144px] left-[60vw] mt-[3px]"
+                    />   - Nasze turnieje</span> 
+                    <span style={{color:"#448efd"}} className="block whitespace-pre"><Queen
+                      size={55}
+                      className="absolute min-[482px]:left-[135px] left-[49vw]"
+                    />   - Rozgrywki ligowe</span>
+                    <span style={{color:"#913bfe"}} className="block whitespace-pre"><King
+                      size={55}
+                      className="absolute min-[482px]:left-[88px] left-[54vw]"
+                    />   - Turnieje rangi mistrzowskiej</span>
                   </p>
                 </div>
               </p>

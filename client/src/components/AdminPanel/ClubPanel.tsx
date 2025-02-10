@@ -199,7 +199,7 @@ const ClubPanel: React.FC = () => {
 
   return (
     <>
-      <div className="p-5 mt-12 bg-gray-800 text-white rounded-md w-3/4 mx-auto">
+      <div className="p-5 mt-12 mb-12 bg-gray-800 text-white rounded-md w-3/4 mx-auto">
         <h2 className="text-2xl mb-4">Dodaj zawodnika</h2>
         <form onSubmit={handleSubmitPlayer} className="mb-5">
           <div className="mb-3">
@@ -253,7 +253,7 @@ const ClubPanel: React.FC = () => {
             onPlayerUpdate={updateLocalPlayers}
           />
         </div>
-        <div className="bg-black min-w-[300px] max-sm:w-3/5 max-sm:mx-auto  mx-auto max-xl:bg-opacity-70 h-5/7 sm:my-auto max-sm:mt-[-250px] rounded-lg p-10 max-sm:py-5 text-3xl text-center">
+        <div className="bg-black min-w-[300px] max-sm:w-3/5 max-sm:mx-auto  mx-auto max-xl:bg-opacity-70 h-5/7 sm:my-auto max-sm:mt-[-250px] rounded-lg p-10 max-sm:py-5 max-sm:text-lg sm:text-xl text-center">
           <p className="text-white">Instruktorzy:</p>
           <div className="h-4/5 flex flex-col justify-between">
             {instructors.length > 0 ? (
@@ -261,13 +261,13 @@ const ClubPanel: React.FC = () => {
                 <div key={index} className="flex justify-between">
                   <span className="text-white">{instructor.fullname}</span>
                   <button
-                    className="px-1 mx-1 bg-red-600 rounded-lg text-lg"
+                    className="px-1 mx-1 bg-red-600 rounded-lg text-lg max-sm:text-sm"
                     onClick={() => handleDeleteTrainer(instructor._id)}
                   >
                     Usuń
                   </button>
                   <button
-                    className="px-1 mx-1 bg-blue-800 rounded-lg text-lg"
+                    className="px-1 mx-1 bg-blue-800 rounded-lg text-lg max-sm:text-sm"
                     onClick={() => handleEditTrainer(instructor)}
                   >
                     Edytuj

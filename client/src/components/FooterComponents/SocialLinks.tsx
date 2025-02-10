@@ -24,7 +24,7 @@ const socialLinks: SocialLinkProps[] = [
     name: "Youtube",
     iconSrc:
       "https://cdn.builder.io/api/v1/image/assets/TEMP/fdce96ad0c83b2525b18f0bbe54823998b3b625a140dfbd5042ff833d86fddc0?placeholderIfAbsent=true&apiKey=3d4b1e2fe5494ed690d3adef16496114",
-    href: "#",
+    href: "https://www.youtube.com/@KlubC4",
   },
 ];
 
@@ -36,6 +36,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ name, iconSrc, href }) => {
       transition={{ type: "spring", stiffness: 300 }}
       href={href}
       className="flex xl:text-[1.3rem] text-[2vw] gap-2.5 items-center p-3 mt-5 border border-solid border-white border-opacity-30 rounded-[149px] max-md:pl-5 text-white hover:no-underline hover:text-current min-w-[120px]"
+      target="_blank"    
     >
       <img
         loading="lazy"

@@ -20,6 +20,7 @@ const NavigationLinks: React.FC = () => {
             transition={{ type: "spring", stiffness: 300 }}
             onClick={() => window.open(item.url, "_blank")}
             className="block hover:no-underline hover:text-current text-white cursor-pointer xl:text-[1.5rem] text-[2vw] min-w-[10px] whitespace-nowrap overflow-hidden text-ellipsis"
+            target="_blank"
           >
             {item.name}
           </motion.a>

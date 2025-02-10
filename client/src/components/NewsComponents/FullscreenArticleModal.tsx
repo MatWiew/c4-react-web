@@ -51,7 +51,7 @@ const FullscreenArticleModal: React.FC<FullscreenArticleModalProps> = ({
           className="mx-auto min-h-[30vw] max-h-[60vh] object-contain rounded mb-4"
         />
         <div
-          className="article-content text-base leading-6"
+          className="article-content text-base leading-6 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
       </div>
