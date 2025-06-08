@@ -1,5 +1,6 @@
 import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Queen from "../assets/Queen";
 import NewsSlider from "./NewsComponents/NewsSlider";
 import FullscreenArticleModal from "./NewsComponents/FullscreenArticleModal"; // Import the fullscreen modal
@@ -13,15 +14,13 @@ interface Article {
 }
 
 const News = forwardRef<HTMLDivElement>((props, ref) => {
+  const navigate = useNavigate();
   const [queenSize, setQueenSize] = useState(
     window.innerWidth > 1023 ? 385 : 335
   );
 
   const [isVisibleFirst, setIsVisibleFirst] = useState(false);
   const [isVisibleSecond, setIsVisibleSecond] = useState(false);
-
-  // State to manage fullscreen mode for the article
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null); // Updated type
 
   // Refs for the elements to be animated
   const refFirst = useRef(null);
@@ -73,9 +72,13 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
     };
   }, []);
 
+  const handleArticleClick = (article: Article) => {
+    navigate(`/news/article:${article._id}`);
+  };
+
   return (
     <>
-      <div className="relative lg:top-[1200px] top-[590px] w-full mx-auto text-center">
+      <div className="relative lg:top-[650px] top-[250px] w-full mx-auto text-center">
         <motion.span
           ref={refFirst}
           className="absolute w-full text-outline font-extrabold lg:text-[9vw] text-[10vw] left-0"
@@ -91,7 +94,7 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
       <motion.div
         ref={refSecond}
-        className="relative flex gap-[20vw] items-center justify-center lg:top-[1300px] md:top-[640px] top-[800px] overflow-x-clip"
+        className="relative flex gap-[20vw] items-center justify-center lg:top-[700px] md:top-[300px] top-[400px] overflow-x-clip"
         initial={{ opacity: 0, gap: "25vw" }}
         animate={{
           opacity: isVisibleSecond ? 1 : 0,
@@ -108,19 +111,9 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
         </div>
         <div className="flex-row md:w-[50vw] w-[80vw] max-w-[1000px] md:h-[385px] h-[300px] rounded-lg ">
           {/* Pass the handler to show fullscreen */}
-          <NewsSlider
-            onClick={(article: Article) => setSelectedArticle(article)}
-          />
+          <NewsSlider onClick={handleArticleClick} />
         </div>
       </motion.div>
-
-      {/* Render FullscreenArticleModal when an article is selected */}
-      {selectedArticle && (
-        <FullscreenArticleModal
-          article={selectedArticle}
-          onClose={() => setSelectedArticle(null)} // Close fullscreen
-        />
-      )}
     </>
   );
 });

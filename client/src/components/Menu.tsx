@@ -78,20 +78,6 @@ const Menu: React.FC<MenuProps> = ({
           style={{ scale: scale, transformOrigin: "right", y: navY }}
         >
           <NavLink
-            to="/"
-            onClick={handleLinkClick("about")}
-            className={linkClasses("about")}
-          >
-            <motion.span
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-block"
-            >
-              Strona główna
-            </motion.span>
-          </NavLink>
-          <NavLink
             to="/news"
             onClick={handleLinkClick("news")}
             className={linkClasses("news")}
@@ -103,6 +89,20 @@ const Menu: React.FC<MenuProps> = ({
               className="inline-block"
             >
               Aktualności
+            </motion.span>
+          </NavLink>
+          <NavLink
+            to="/about"
+            onClick={handleLinkClick("about")}
+            className={linkClasses("about")}
+          >
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-block"
+            >
+              O nas
             </motion.span>
           </NavLink>
           <NavLink

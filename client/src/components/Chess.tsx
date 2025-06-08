@@ -61,7 +61,7 @@ const Chess = () => {
   return (
     <>
       <motion.div
-        className="lg:relative relative w-full lg:top-[480px] top-[200px] max-w-[1200px] mx-auto"
+        className="lg:relative relative w-full lg:top-[350px] top-[0px] max-w-[1200px] mx-auto"
         ref={refFirst}
         initial={{ opacity: 0, y: 100 }}
         animate={{
@@ -96,7 +96,7 @@ const Chess = () => {
           </div>
         </div>
       </motion.div>
-      <div className="relative absolute flex justify-between lg:h-[130px] h-[15vw] lg:top-[570px] top-[16rem] w-full overflow-x-clip">
+      <div className="relative absolute flex justify-between lg:h-[130px] h-[15vw] lg:top-[480px] top-[8rem] w-full overflow-x-clip">
         <motion.div
           className="relative lg:h-[130px] h-[15vw] max-h-[100px] lg:w-[50%] w-full max-w-[1200px] lg:rounded-r-lg bg-zinc-800"
           ref={refSecond}

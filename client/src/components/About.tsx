@@ -26,7 +26,7 @@ const About = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <>
-      <div ref={ref} id="about" className="relative top-0 flex w-full justify-center snap-start">
+      <div ref={ref} id="about" className="relative lg:top-[1950px] md:top-[1300px] top-[1400px] flex w-full justify-center snap-start">
         <div className="flex items-center lg:max-w-[525px] lg:mt-[457px] mt-[20rem]">
           <div className="text-center">
             <div className="lg:text-5xl text-4xl italic font-black text-white lg:max-w-[45vw] max-w-[100vw]">

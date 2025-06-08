@@ -31,14 +31,14 @@ type MenuItemProps = {
 };
 
 const menuItemsTexts = [
-  "Strona główna",
   "Aktualności",
+  "O nas",
   "Turnieje",
   "Klub",
   "Kontakt",
 ];
 
-const to = ["/", "/news", "/tournaments", "/club", "/contact"];
+const to = ["/news", "/about", "/tournaments", "/club", "/contact"];
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   i,
@@ -48,8 +48,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
 
   const refs: References = {
-    0: "about",
-    1: "news",
+    0: "news",
+    1: "about",
     2: "tournaments",
     3: "club",
     4: "contact",

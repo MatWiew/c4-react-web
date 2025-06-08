@@ -11,10 +11,15 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Admin from "./components/Admin";
 import "vanilla-cookieconsent/dist/cookieconsent.css";
+import FullscreenArticleModal from "./components/NewsComponents/FullscreenArticleModal";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+
+  // Extract article id if on article modal route
+  const articleMatch = location.pathname.match(/^\/news\/article:([^\/]+)$/);
+  const articleId = articleMatch ? articleMatch[1] : null;
 
   // Create refs for each section
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -37,17 +42,19 @@ const App: React.FC = () => {
 
   // Update URL based on the active section
   useEffect(() => {
-    if (activeSection) {
+    const isOnArticlePage = location.pathname.startsWith("/news/article/");
+    if (activeSection === "article" && activeSection !== "article") {
       const pathMap: { [key: string]: string } = {
-        about: "/",
+        about: "/about",
         news: "/news",
+        article: "/news",
         tournaments: "/tournaments",
         club: "/club",
         contact: "/contact",
       };
       navigate(pathMap[activeSection]);
     }
-  }, [activeSection, navigate]);
+  }, [activeSection, navigate, location.pathname]);
 
   const scrollToDesiredContent = (section: string): Promise<void> => {
     return new Promise((resolve) => {
@@ -73,6 +80,10 @@ const App: React.FC = () => {
   // Check if the current path is /admin
   const isAdminPath = location.pathname === "/admin";
 
+  const closeModal = () => {
+    navigate("/news");
+  };
+
   return (
     <div className="App snap-y snap-mandatory overflow-x-clip">
       {isAdminPath ? (
@@ -83,9 +94,16 @@ const App: React.FC = () => {
             scrollToDesiredContent={scrollToDesiredContent}
             activeSection={activeSection}
           />
+          <News ref={newsRef} />
+          {/* Show the fullscreen article modal if articleId exists */}
+          {articleId && (
+            <FullscreenArticleModal
+              articleId={articleId}
+              onClose={closeModal}
+            />
+          )}
           <About ref={aboutRef} />
           <Chess />
-          <News ref={newsRef} />
           <Tournaments ref={tournamentsRef} />
           <Club ref={clubRef} />
           <Contact ref={contactRef} />
