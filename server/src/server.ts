@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 async function checkDatabaseSize(): Promise<number> {
   if (mongoose.connection.readyState !== 1 || !mongoose.connection.db) {
-    throw new Error('Database is not connected.');
+    throw new Error("Database is not connected.");
   }
 
   const stats = await mongoose.connection.db.stats();
@@ -182,7 +182,7 @@ app.post("/api/send-email", async (req: Request, res: Response) => {
   // Email options
   const mailOptions = {
     from: email,
-    to: "Paweljakubvalmet@gmail.com",
+    to: process.env.EMAIL_USER,
     subject: `Wiadomość od ${name}`,
     text: `Imię: ${name},\nAdres mailowy: ${email},\n\nWiadomość: ${message}`,
   };
@@ -366,6 +366,20 @@ app.get("/api/articles", async (req: Request, res: Response) => {
   try {
     const articles = await Article.find();
     res.json(articles);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Server error", error: (err as Error).message });
+  }
+});
+
+app.get("/api/articles/:id", async (req: Request, res: Response) => {
+  try {
+    const article = await Article.findById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+    res.json(article);
   } catch (err) {
     res
       .status(500)
