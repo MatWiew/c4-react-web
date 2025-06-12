@@ -183,7 +183,7 @@ app.post("/api/send-email", async (req: Request, res: Response) => {
   const mailOptions = {
     from: email,
     to: process.env.EMAIL_USER,
-    subject: `Wiadomość od ${name}`,
+    subject: `Wiadomość od ${name} [strona internetowa c4]`,
     text: `Imię: ${name},\nAdres mailowy: ${email},\n\nWiadomość: ${message}`,
   };
 
