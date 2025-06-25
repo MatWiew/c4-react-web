@@ -49,7 +49,7 @@ const Archive: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, []);
 
   const handleArticleClick = (article: any) => {
-    navigate(`/news/article:${article._id}`);
+    navigate(`/news/article/${article._id}`);
   };
 
   const handleModalClose = () => {

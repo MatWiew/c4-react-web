@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const location = useLocation(); // Get the current location
 
   // Extract article id if on article modal route
-  const articleMatch = location.pathname.match(/^\/news\/article:([^\/]+)$/);
+  const articleMatch = location.pathname.match(/^\/news\/article\/([^\/]+)$/);
   const articleId = articleMatch ? articleMatch[1] : null;
 
   // Create refs for each section

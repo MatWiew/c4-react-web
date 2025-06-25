@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Queen from "../assets/Queen";
 import NewsSlider from "./NewsComponents/NewsSlider";
-import FullscreenArticleModal from "./NewsComponents/FullscreenArticleModal"; // Import the fullscreen modal
 
 // Define the Article interface here if it's not globally available
 interface Article {
@@ -73,7 +72,7 @@ const News = forwardRef<HTMLDivElement>((props, ref) => {
   }, []);
 
   const handleArticleClick = (article: Article) => {
-    navigate(`/news/article:${article._id}`);
+    navigate(`/news/article/${article._id}`);
   };
 
   return (

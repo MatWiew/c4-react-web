@@ -23,7 +23,7 @@ const FullscreenArticleModal: React.FC<FullscreenArticleModalProps> = ({
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await axios.get(`/api/articles/${articleId}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/articles/${articleId}`);
         setArticle(res.data);
       } catch (err) {
         console.error("Failed to load article:", err);
