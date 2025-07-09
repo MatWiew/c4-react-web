@@ -3,6 +3,7 @@ import NavigationLinks from "./NavigationLinks";
 import SocialLinks from "./SocialLinks";
 import ClubLogo from "../../assets/ClubLogo";
 import { motion, useTransform, useScroll } from "framer-motion";
+import CompanyData from "./CompanyData";
 
 interface FootEndProps {
   scrollToDesiredContent: (section: string) => Promise<void>;
@@ -17,8 +18,15 @@ const FootEnd: React.FC<FootEndProps> = ({ scrollToDesiredContent }) => {
     [0, 1] // Output range from 100% to 50% opacity
   );
 
+  const dataOpacity = useTransform(
+    scrollYProgress,
+    [0.75, 0.95], // Input range from 85% to 95% of scroll progress
+    [0, 1] // Output range from 100% to 50% opacity
+  );
+
   return (
     <>
+      <CompanyData opacity={dataOpacity}/>
       <motion.footer
         style={{ opacity }} // Apply dynamic opacity
         className="flex flex-wrap gap-5 justify-between mx-auto w-full lg:mt-[30vw] mt-[200px]"
